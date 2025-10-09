@@ -12,25 +12,21 @@
       --muted:#94a3b8;
       --accent:#7dd3fc;
       --shadow:0 6px 22px rgba(0,0,0,.35);
-      --radius:14px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{min-height:100%}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:linear-gradient(180deg,#0b0f14 0%,#121826 100%);
       color:var(--text);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:32px 16px;
+      padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
     }
-    .wrap{width:100%;max-width:820px;display:grid;gap:16px}
-    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:20px}
+    a{color:var(--accent);text-decoration:none}
+    .wrap{max-width:860px;margin:0 auto;display:grid;gap:16px}
     header{
       text-align:center;background:var(--card);border-radius:14px;box-shadow:var(--shadow);
-      padding:18px 20px;display:grid;gap:10px;justify-items:center;
+      padding:18px 20px 12px;display:grid;gap:10px;justify-items:center
     }
     header h1{margin:0;font-size:20px;letter-spacing:.3px}
     .lang{display:flex;gap:8px;align-items:center;justify-content:center}
@@ -39,6 +35,7 @@
       padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:600;min-width:56px;
     }
     .lang button.active{background:var(--accent);color:#001018;border-color:transparent}
+    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:20px}
     .grid{display:grid;gap:14px}
     .grid.cols{grid-template-columns:repeat(3,minmax(0,1fr))}
     .field{display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -170,15 +167,12 @@
     if(!Number.isFinite(age) || !Number.isFinite(weight) || !Number.isFinite(height)){
       $('avg').textContent = '—'; return;
     }
-    // Mifflin–St Jeor
     const mifflinBMR = (10*weight) + (6.25*height) - (5*age) + (gender === 'male' ? 5 : -161);
     const mifflinTDEE = mifflinBMR * 1.5;
-    // EER
     const hM = height/100;
     const eer = (gender === 'male')
       ? (662 - (9.53*age) + (15.91*weight) + (539.6*hM))
       : (354 - (6.91*age) + (9.36*weight) + (726*hM));
-    // Harris–Benedict (Revised) × 1.375
     const hbBMR = (gender === 'male')
       ? (66.4730 + (13.7516*weight) + (5.0033*height) - (6.7550*age))
       : (655.0955 + (9.5634*weight) + (1.8496*height) - (4.6756*age));
@@ -192,15 +186,15 @@
     $('avg').textContent='—';
   }
 
-  $('calc').addEventListener('click', compute);
-  $('reset').addEventListener('click', resetAll);
+  document.getElementById('calc').addEventListener('click', compute);
+  document.getElementById('reset').addEventListener('click', resetAll);
   ['age','weight','height'].forEach(id=>{
-    $(id).addEventListener('keydown', (e)=>{ if(e.key==='Enter') compute(); });
+    document.getElementById(id).addEventListener('keydown', (e)=>{ if(e.key==='Enter') compute(); });
   });
-  $('btn-en').addEventListener('click', ()=>setLang('en'));
-  $('btn-ar').addEventListener('click', ()=>setLang('ar'));
+  document.getElementById('btn-en').addEventListener('click', ()=>setLang('en'));
+  document.getElementById('btn-ar').addEventListener('click', ()=>setLang('ar'));
 
-  setLang('en');
+  setLang('ar'); // default Arabic
 })();
 </script>
 </body>
