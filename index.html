@@ -13,43 +13,46 @@
       --muted:#94a3b8;
       --accent:#7dd3fc;
       --shadow:0 6px 22px rgba(0,0,0,.35);
+      --radius:14px;
     }
     *{box-sizing:border-box}
-    html{
-      height:100%;
-      background:linear-gradient(180deg,var(--bg) 0%,var(--grad) 100%);
-      -webkit-tap-highlight-color: transparent;
-    }
+    html{height:100%;background:var(--bg)}
     body{
-      min-height:100vh;
+      min-height:100dvh;
       margin:0;
-      display:flex;flex-direction:column;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--text);
-      background:transparent;
-      padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(20px + env(safe-area-inset-bottom, 0px));
+      background:linear-gradient(180deg,var(--bg) 0%, var(--grad) 100%);
+      padding-top: calc(72px + env(safe-area-inset-top, 0px)); /* space for fixed header */
+      padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+      display:flex;flex-direction:column;
     }
-    a{color:var(--accent);text-decoration:none}
-    .wrap{width:100%;max-width:860px;margin:0 auto;display:grid;gap:14px;flex:1}
-    header{
-      text-align:center;background:var(--card);border-radius:14px;box-shadow:var(--shadow);
-      padding:14px 16px 10px;display:grid;gap:8px;justify-items:center
+    /* Fixed top header */
+    .topbar{
+      position:fixed;inset:0 0 auto 0;height:72px;
+      background:rgba(18,25,38,.9);backdrop-filter:saturate(140%) blur(6px);
+      display:flex;align-items:center;justify-content:center;
+      border-bottom:1px solid #1f2a3c;z-index:50;padding:0 12px;
     }
-    header h1{margin:0;font-size:18px;letter-spacing:.2px}
-    .lang{display:flex;gap:8px;align-items:center;justify-content:center;direction:ltr}
+    .top-inner{width:100%;max-width:860px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .title{margin:0;font-size:18px;letter-spacing:.2px}
+    .lang{display:flex;gap:8px;align-items:center;direction:ltr}
     .lang button{
       border:1px solid #2a3a52;background:#0f172a;color:var(--text);
-      padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:600;min-width:56px;
+      padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:700;min-width:44px;
     }
     .lang button.active{background:var(--accent);color:#001018;border-color:transparent}
-    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px}
+    /* Layout */
+    .wrap{width:100%;max-width:860px;margin:0 auto;display:grid;gap:16px;padding:0 12px;flex:1}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
     .grid{display:grid;gap:12px}
     .grid.cols{grid-template-columns:repeat(3,minmax(0,1fr))}
     .field{display:flex;flex-direction:column;gap:6px;align-items:center}
-    .field label{font-size:13px;color:var(--muted)}
+    label{font-size:13px;color:var(--muted)}
     input[type="number"]{
-      width:100%;border:1px solid #1f2937;background:#0f172a;color:var(--text);
-      padding:12px 10px;border-radius:10px;font-size:15px;outline:none;max-width:220px;text-align:center;
+      width:100%;max-width:220px;text-align:center;
+      border:1px solid #1f2937;background:#0f172a;color:var(--text);
+      padding:12px 10px;border-radius:10px;font-size:15px;outline:none;
     }
     input[type="number"]::placeholder{color:#64748b}
     .gender{display:flex;gap:18px;justify-content:center}
@@ -57,29 +60,32 @@
     .row{display:flex;gap:12px;justify-content:center;margin-top:4px}
     .btn{
       appearance:none;border:0;border-radius:12px;background:var(--accent);
-      color:#001018;font-weight:700;padding:12px 18px;cursor:pointer;font-size:15px;
+      color:#001018;font-weight:800;padding:12px 18px;cursor:pointer;font-size:15px;
       box-shadow:0 8px 22px rgba(125,211,252,.25);min-width:120px;
     }
     .btn.secondary{background:#0f172a;color:var(--text);border:1px solid #28364d;box-shadow:none}
+    /* Result card smaller */
     .result{display:grid;gap:10px;justify-items:center;text-align:center}
-    .rbox{border:1px solid #27364f;background:#0c1424;padding:14px;border-radius:12px;min-width:60%}
-    .rtitle{margin:0 0 6px 0;font-size:16px;color:var(--text);opacity:.9}
-    .rvalue{font-size:26px;font-weight:800;letter-spacing:.3px}
-    .muted{color:var(--muted);font-size:12px;text-align:center}
-    footer{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
-    @media (max-width:600px){ .grid.cols{grid-template-columns:1fr} .rbox{min-width:100%} }
+    .rbox{border:1px solid #27364f;background:#0c1424;padding:10px 12px;border-radius:12px;width:min(380px,100%)}
+    .rtitle{margin:0 0 4px 0;font-size:14px;color:var(--text);opacity:.9}
+    .rvalue{font-size:22px;font-weight:800;letter-spacing:.3px}
+    footer{color:var(--muted);font-size:12px;text-align:center;margin-top:auto;padding:8px 12px 0}
+    .small-note{color:var(--muted);font-size:12px;margin-bottom:4px}
+    @media (max-width:600px){ .grid.cols{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1 id="title">مُقدِّر السعرات الأساسية</h1>
+  <div class="topbar">
+    <div class="top-inner">
+      <h1 class="title" id="title">مُقدِّر السعرات الأساسية</h1>
       <div class="lang" aria-label="Language">
-        <button id="btn-ar" class="active" type="button">AR</button>
-        <button id="btn-en" type="button">EN</button>
+        <button id="btn-en" type="button">E</button>
+        <button id="btn-ar" class="active" type="button">ع</button>
       </div>
-    </header>
+    </div>
+  </div>
 
+  <main class="wrap">
     <section class="card">
       <div class="grid">
         <div class="field">
@@ -115,13 +121,13 @@
         <h3 class="rtitle" id="avg-label">سعرات المحافظة اليومية</h3>
         <div class="rvalue" id="avg">—</div>
       </div>
-      <div class="muted" id="foot-formulas">
-        الطرق المستخدمة: Mifflin–St Jeor؛ EER (IOM 2002)؛ Harris–Benedict (Revised).
-      </div>
     </section>
-  </div>
+  </main>
 
-  <footer id="copyright">© 2025 — تقدير مبسّط مبني على ثلاث طرق موثوقة.</footer>
+  <footer>
+    <div class="small-note" id="msg-line">تقدير مبسّط مبني على ثلاث طرق موثوقة لتتبع السعرات</div>
+    <div id="copyright">© 2025 — جميع الحقوق محفوظة.</div>
+  </footer>
 
 <script>
 (function(){
@@ -135,8 +141,8 @@
       age:"العمر (سنة)", weight:"الوزن (كجم)", height:"الطول (سم)",
       calc:"احسب", reset:"إعادة تعيين",
       avgLabel:"سعرات المحافظة اليومية",
-      formulas:"الطرق المستخدمة: Mifflin–St Jeor؛ EER (IOM 2002)؛ Harris–Benedict (Revised).",
-      copyright:"© 2025 — تقدير مبسّط مبني على ثلاث طرق موثوقة."
+      msg:"تقدير مبسّط مبني على ثلاث طرق موثوقة لتتبع السعرات",
+      rights:"© 2025 — جميع الحقوق محفوظة."
     },
     en: {
       dir:"ltr", title:"Calorie baseline estimator",
@@ -144,8 +150,8 @@
       age:"Age (years)", weight:"Weight (kg)", height:"Height (cm)",
       calc:"Calculate", reset:"Reset",
       avgLabel:"Daily maintenance calories",
-      formulas:"Methods: Mifflin–St Jeor; EER (IOM 2002); Harris–Benedict (Revised).",
-      copyright:"© 2025 — Minimal estimate based on three validated methods."
+      msg:"Minimal estimate based on three validated methods for calorie tracking",
+      rights:"© 2025 — All rights reserved."
     }
   };
 
@@ -163,9 +169,8 @@
     $('calc').textContent = t.calc;
     $('reset').textContent = t.reset;
     $('avg-label').textContent = t.avgLabel;
-    $('foot-formulas').textContent = t.formulas;
-    $('copyright').textContent = t.copyright;
-    // toggle active
+    $('msg-line').textContent = t.msg;
+    $('copyright').textContent = t.rights;
     document.getElementById('btn-ar').classList.toggle('active', lang==='ar');
     document.getElementById('btn-en').classList.toggle('active', lang==='en');
   }
@@ -178,16 +183,20 @@
     if(!Number.isFinite(age) || !Number.isFinite(weight) || !Number.isFinite(height)){
       $('avg').textContent = '—'; return;
     }
+    // Mifflin–St Jeor × 1.5
     const mifflinBMR = (10*weight) + (6.25*height) - (5*age) + (gender === 'male' ? 5 : -161);
     const mifflinTDEE = mifflinBMR * 1.5;
+    // EER (IOM 2002), PA = 1.0
     const hM = height/100;
     const eer = (gender === 'male')
       ? (662 - (9.53*age) + (15.91*weight) + (539.6*hM))
       : (354 - (6.91*age) + (9.36*weight) + (726*hM));
+    // Harris–Benedict (Revised) × 1.375
     const hbBMR = (gender === 'male')
       ? (66.4730 + (13.7516*weight) + (5.0033*height) - (6.7550*age))
       : (655.0955 + (9.5634*weight) + (1.8496*height) - (4.6756*age));
     const hbTDEE = hbBMR * 1.375;
+    // Average and round to nearest 50
     const avg = (mifflinTDEE + eer + hbTDEE) / 3;
     $('avg').textContent = Math.round(roundTo50(avg)) + " kcal";
   }
@@ -197,7 +206,6 @@
     $('avg').textContent='—';
   }
 
-  // events
   document.getElementById('calc').addEventListener('click', compute);
   document.getElementById('reset').addEventListener('click', resetAll);
   ['age','weight','height'].forEach(id=>{
@@ -206,8 +214,7 @@
   document.getElementById('btn-en').addEventListener('click', ()=>setLang('en'));
   document.getElementById('btn-ar').addEventListener('click', ()=>setLang('ar'));
 
-  // default Arabic as in your screenshot
-  setLang('ar');
+  setLang('ar'); // default Arabic
 })();
 </script>
 </body>
