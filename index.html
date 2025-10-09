@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calorie baseline estimator</title>
+  <title>مُقدِّر السعرات الأساسية</title>
   <style>
     :root{
       --bg:#0b0f14;
+      --grad:#121826;
       --card:#121926;
       --text:#e6eef8;
       --muted:#94a3b8;
@@ -14,29 +15,35 @@
       --shadow:0 6px 22px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
-    html,body{min-height:100%}
+    html{
+      height:100%;
+      background:linear-gradient(180deg,var(--bg) 0%,var(--grad) 100%);
+      -webkit-tap-highlight-color: transparent;
+    }
     body{
+      min-height:100vh;
       margin:0;
+      display:flex;flex-direction:column;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:linear-gradient(180deg,#0b0f14 0%,#121826 100%);
       color:var(--text);
-      padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
+      background:transparent;
+      padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(20px + env(safe-area-inset-bottom, 0px));
     }
     a{color:var(--accent);text-decoration:none}
-    .wrap{max-width:860px;margin:0 auto;display:grid;gap:16px}
+    .wrap{width:100%;max-width:860px;margin:0 auto;display:grid;gap:14px;flex:1}
     header{
       text-align:center;background:var(--card);border-radius:14px;box-shadow:var(--shadow);
-      padding:18px 20px 12px;display:grid;gap:10px;justify-items:center
+      padding:14px 16px 10px;display:grid;gap:8px;justify-items:center
     }
-    header h1{margin:0;font-size:20px;letter-spacing:.3px}
-    .lang{display:flex;gap:8px;align-items:center;justify-content:center}
+    header h1{margin:0;font-size:18px;letter-spacing:.2px}
+    .lang{display:flex;gap:8px;align-items:center;justify-content:center;direction:ltr}
     .lang button{
       border:1px solid #2a3a52;background:#0f172a;color:var(--text);
       padding:6px 10px;border-radius:10px;cursor:pointer;font-weight:600;min-width:56px;
     }
     .lang button.active{background:var(--accent);color:#001018;border-color:transparent}
-    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:20px}
-    .grid{display:grid;gap:14px}
+    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px}
+    .grid{display:grid;gap:12px}
     .grid.cols{grid-template-columns:repeat(3,minmax(0,1fr))}
     .field{display:flex;flex-direction:column;gap:6px;align-items:center}
     .field label{font-size:13px;color:var(--muted)}
@@ -55,61 +62,66 @@
     }
     .btn.secondary{background:#0f172a;color:var(--text);border:1px solid #28364d;box-shadow:none}
     .result{display:grid;gap:10px;justify-items:center;text-align:center}
-    .rline{border:1px solid #27364f;background:#0c1424;padding:16px 18px;border-radius:12px;font-size:20px;min-width:60%;}
+    .rbox{border:1px solid #27364f;background:#0c1424;padding:14px;border-radius:12px;min-width:60%}
+    .rtitle{margin:0 0 6px 0;font-size:16px;color:var(--text);opacity:.9}
+    .rvalue{font-size:26px;font-weight:800;letter-spacing:.3px}
     .muted{color:var(--muted);font-size:12px;text-align:center}
-    footer{color:var(--muted);font-size:12px;text-align:center}
-    @media (max-width:600px){ .grid.cols{grid-template-columns:1fr} .rline{min-width:100%} }
+    footer{color:var(--muted);font-size:12px;text-align:center;margin-top:8px}
+    @media (max-width:600px){ .grid.cols{grid-template-columns:1fr} .rbox{min-width:100%} }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1 id="title">Calorie baseline estimator</h1>
+      <h1 id="title">مُقدِّر السعرات الأساسية</h1>
       <div class="lang" aria-label="Language">
-        <button id="btn-en" class="active" type="button">EN</button>
-        <button id="btn-ar" type="button">AR</button>
+        <button id="btn-ar" class="active" type="button">AR</button>
+        <button id="btn-en" type="button">EN</button>
       </div>
     </header>
 
     <section class="card">
       <div class="grid">
         <div class="field">
-          <label id="lab-gender">Gender</label>
+          <label id="lab-gender">الجنس</label>
           <div class="gender" role="radiogroup" aria-label="Gender">
-            <label><input type="radio" name="gender" value="male" checked> <span id="lab-male">Male</span></label>
-            <label><input type="radio" name="gender" value="female"> <span id="lab-female">Female</span></label>
+            <label><input type="radio" name="gender" value="male" checked> <span id="lab-male">ذكر</span></label>
+            <label><input type="radio" name="gender" value="female"> <span id="lab-female">أنثى</span></label>
           </div>
         </div>
         <div class="grid cols">
           <div class="field">
-            <label for="age" id="lab-age">Age (years)</label>
+            <label for="age" id="lab-age">العمر (سنة)</label>
             <input id="age" type="number" inputmode="numeric" min="10" max="100" step="1" placeholder="31">
           </div>
           <div class="field">
-            <label for="weight" id="lab-weight">Weight (kg)</label>
+            <label for="weight" id="lab-weight">الوزن (كجم)</label>
             <input id="weight" type="number" inputmode="decimal" min="30" max="250" step="0.1" placeholder="90">
           </div>
           <div class="field">
-            <label for="height" id="lab-height">Height (cm)</label>
+            <label for="height" id="lab-height">الطول (سم)</label>
             <input id="height" type="number" inputmode="decimal" min="120" max="230" step="0.1" placeholder="172">
           </div>
         </div>
         <div class="row">
-          <button id="calc" class="btn" type="button">Calculate</button>
-          <button id="reset" class="btn secondary" type="button">Reset</button>
+          <button id="calc" class="btn" type="button">احسب</button>
+          <button id="reset" class="btn secondary" type="button">إعادة تعيين</button>
         </div>
       </div>
     </section>
 
     <section class="card result" aria-live="polite">
-      <div class="rline"><b id="avg-label">Daily maintenance calories</b>: <span id="avg">—</span></div>
+      <div class="rbox">
+        <h3 class="rtitle" id="avg-label">سعرات المحافظة اليومية</h3>
+        <div class="rvalue" id="avg">—</div>
+      </div>
       <div class="muted" id="foot-formulas">
-        Methods: Mifflin–St Jeor; EER (IOM 2002); Harris–Benedict (Revised).
+        الطرق المستخدمة: Mifflin–St Jeor؛ EER (IOM 2002)؛ Harris–Benedict (Revised).
       </div>
     </section>
-
-    <footer id="copyright">© 2025 — Minimal estimate based on three validated methods.</footer>
   </div>
+
+  <footer id="copyright">© 2025 — تقدير مبسّط مبني على ثلاث طرق موثوقة.</footer>
 
 <script>
 (function(){
@@ -117,25 +129,23 @@
   const roundTo50 = (x)=> Math.round(x/50)*50;
 
   const i18n = {
-    en: {
-      dir:"ltr",
-      title:"Calorie baseline estimator",
-      gender:"Gender", male:"Male", female:"Female",
-      age:"Age (years)", weight:"Weight (kg)", height:"Height (cm)",
-      calc:"Calculate", reset:"Reset",
-      avgLabel:"Daily maintenance calories",
-      formulas:"Methods: Mifflin–St Jeor; EER (IOM 2002); Harris–Benedict (Revised).",
-      copyright:"© 2025 — Minimal estimate based on three validated methods."
-    },
     ar: {
-      dir:"rtl",
-      title:"مُقدِّر السعرات الأساسية",
+      dir:"rtl", title:"مُقدِّر السعرات الأساسية",
       gender:"الجنس", male:"ذكر", female:"أنثى",
       age:"العمر (سنة)", weight:"الوزن (كجم)", height:"الطول (سم)",
       calc:"احسب", reset:"إعادة تعيين",
       avgLabel:"سعرات المحافظة اليومية",
       formulas:"الطرق المستخدمة: Mifflin–St Jeor؛ EER (IOM 2002)؛ Harris–Benedict (Revised).",
       copyright:"© 2025 — تقدير مبسّط مبني على ثلاث طرق موثوقة."
+    },
+    en: {
+      dir:"ltr", title:"Calorie baseline estimator",
+      gender:"Gender", male:"Male", female:"Female",
+      age:"Age (years)", weight:"Weight (kg)", height:"Height (cm)",
+      calc:"Calculate", reset:"Reset",
+      avgLabel:"Daily maintenance calories",
+      formulas:"Methods: Mifflin–St Jeor; EER (IOM 2002); Harris–Benedict (Revised).",
+      copyright:"© 2025 — Minimal estimate based on three validated methods."
     }
   };
 
@@ -155,8 +165,9 @@
     $('avg-label').textContent = t.avgLabel;
     $('foot-formulas').textContent = t.formulas;
     $('copyright').textContent = t.copyright;
-    $('btn-en').classList.toggle('active', lang==='en');
-    $('btn-ar').classList.toggle('active', lang==='ar');
+    // toggle active
+    document.getElementById('btn-ar').classList.toggle('active', lang==='ar');
+    document.getElementById('btn-en').classList.toggle('active', lang==='en');
   }
 
   function compute(){
@@ -186,6 +197,7 @@
     $('avg').textContent='—';
   }
 
+  // events
   document.getElementById('calc').addEventListener('click', compute);
   document.getElementById('reset').addEventListener('click', resetAll);
   ['age','weight','height'].forEach(id=>{
@@ -194,7 +206,8 @@
   document.getElementById('btn-en').addEventListener('click', ()=>setLang('en'));
   document.getElementById('btn-ar').addEventListener('click', ()=>setLang('ar'));
 
-  setLang('ar'); // default Arabic
+  // default Arabic as in your screenshot
+  setLang('ar');
 })();
 </script>
 </body>
