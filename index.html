@@ -246,12 +246,19 @@
   let weightGlobal = 0;
 
   const goalsData = [
-    { id: 'rapid',  en:'Rapid Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.25, p:2.0, f_factor:0.5,  w_pct:[-0.0125, -0.0175], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
-    { id: 'cut',    en:'Cutting',   ar:'تنشيف',     c_min:-0.25, c_max:-0.10, p:1.9, f_factor:0.6,  w_pct:[-0.005, -0.0125],  timeEn:'8 → 16 weeks', timeAr:'٨ ← ١٦ أسبوع' },
-    { id: 'recomp', en:'Recomp.',   ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p:1.8, f_factor:0.65, w_pct:[-0.0025, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    // 0: Rapid Cut (-30% to -50%)
+    { id: 'rapid',  en:'Rapid Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:2.0, f_factor:0.5,  w_pct:[-0.0125, -0.0175], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
+    // 1: Cutting (-15% to -30%)
+    { id: 'cut',    en:'Cutting',   ar:'تنشيف',     c_min:-0.30, c_max:-0.15, p:1.9, f_factor:0.6,  w_pct:[-0.005, -0.0125],  timeEn:'8 → 16 weeks', timeAr:'٨ ← ١٦ أسبوع' },
+    // 2: Recomp (-5% to -15%)
+    { id: 'recomp', en:'Recomp.',   ar:'إعادة تشكيل', c_min:-0.15, c_max:-0.05, p:1.8, f_factor:0.65, w_pct:[-0.0025, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    // 3: Maintain (0% to -5%)
     { id: 'maint',  en:'Maintain',  ar:'محافظة',    c_min:-0.05, c_max:0.00,  p:1.7, f_factor:0.7,  w_pct:[0.0025, -0.0025],  timeEn:'Lifelong',    timeAr:'نمط حياة' },
+    // 4: MainGain (0% to +5%)
     { id: 'gain',   en:'MainGain',  ar:'بناء محافظ', c_min:0.00,  c_max:0.05,  p:1.6, f_factor:0.75, w_pct:[0, 0.0025],      timeEn:'6 → 12 months',timeAr:'٦ ← ١٢ شهر' },
+    // 5: Lean Bulk (+5% to +10%)
     { id: 'lean',   en:'Lean Bulk', ar:'تضخيم صافي',c_min:0.05,  c_max:0.10,  p:1.5, f_factor:0.8,  w_pct:[0.0025, 0.005],  timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
+    // 6: Bulking (+10% to +25%)
     { id: 'bulk',   en:'Bulking',   ar:'تضخيم',     c_min:0.10,  c_max:0.25,  p:1.4, f_factor:0.9,  w_pct:[0.005, 0.01],    timeEn:'3 → 5 months', timeAr:'٣ ← ٥ أشهر' }
   ];
 
@@ -305,7 +312,7 @@
 
 
     const sl = $('slider-labels');
-    // تعيين النصوص مباشرة بدون لف ودوران
+    // تعيين النصوص مباشرة 
     // العنصر الأول = يمين
     sl.children[0].textContent = t.sl_1;
     // العنصر الثاني = وسط
