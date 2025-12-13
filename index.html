@@ -68,6 +68,49 @@
       border:1px solid var(--input-border); background:var(--input-bg); color:var(--text);
       padding:12px 8px; border-radius:10px; font-size:15px; outline:none; direction:ltr;
     }
+    
+    /* Toggle Switch Style - ديناميكي حسب اللغة */
+    .switch-field {
+        display: flex; align-items: center; justify-content: center; gap: 12px;
+        background: var(--subcard-bg); padding: 12px; border-radius: 12px;
+        border: 1px solid var(--border); width: 100%; cursor: pointer;
+    }
+    .switch-label { font-size: 14px; font-weight: 600; color: var(--text); }
+    
+    .toggle-switch {
+      position: relative; width: 50px; height: 26px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    
+    /* المسار الخلفي للزر */
+    .slider {
+      position: absolute; cursor: pointer; inset: 0;
+      background-color: var(--input-border); border-radius: 34px;
+      transition: .4s;
+    }
+    /* الدائرة البيضاء */
+    .slider:before {
+      position: absolute; content: ""; height: 20px; width: 20px;
+      bottom: 3px; background-color: white; border-radius: 50%; transition: .4s;
+      /* الوضع الافتراضي LTR: الدائرة تكون يسار */
+      left: 3px; 
+    }
+
+    /* --- تعديلات RTL للزر --- */
+    html[dir="rtl"] .slider:before {
+        left: auto; right: 3px; /* بالعربي تكون يمين */
+    }
+
+    /* حالة التفعيل */
+    input:checked + .slider { background-color: var(--accent); }
+
+    /* حركة التحريك عند التفعيل (LTR) */
+    html[dir="ltr"] input:checked + .slider:before { transform: translateX(24px); }
+    
+    /* حركة التحريك عند التفعيل (RTL) - تتحرك لليسار */
+    html[dir="rtl"] input:checked + .slider:before { transform: translateX(-24px); }
+
+
     .btn{
       border:0; border-radius:12px; background:var(--accent); color:#001018;
       font-weight:800; padding:12px 18px; cursor:pointer; width:100%; margin-top:10px;
@@ -91,37 +134,51 @@
       transition: color 0.3s ease;
     }
     .timeline-label {
-        font-size: 14px; color: var(--text); font-weight: 600; opacity: 0.8; direction: rtl; unicode-bidi: embed;
+        font-size: 14px; color: var(--text); font-weight: 600; opacity: 0.8; direction: inherit; unicode-bidi: embed;
     }
     
     input[type=range] {
       -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer;
     }
-    /* التدرج اللوني: اليسار (أزرق) -> اليمين (أحمر) */
+
+    /* --- تدرج الألوان الذكي حسب اللغة --- */
     input[type=range]::-webkit-slider-runnable-track {
       width: 100%; height: 10px; border-radius: 5px;
+      /* الافتراضي (LTR): أحمر يسار -> أزرق يمين */
       background: linear-gradient(90deg, 
-        var(--c-blue) 0%,   /* يسار */
-        var(--c-cyan) 20%,  
-        var(--c-teal) 35%,  
-        var(--c-green) 50%, /* وسط */
-        var(--c-yellow) 65%,
-        var(--c-orange) 80%,
-        var(--c-red) 100%   /* يمين */
+        var(--c-red) 0%,   
+        var(--c-orange) 20%,
+        var(--c-yellow) 35%,
+        var(--c-green) 50%, 
+        var(--c-teal) 65%,  
+        var(--c-cyan) 80%,  
+        var(--c-blue) 100%
       );
     }
+
+    /* تعديل التدرج للعربي (RTL): أزرق يسار -> أحمر يمين (عكسناه عشان يطابق المنطق) */
+    html[dir="rtl"] input[type=range]::-webkit-slider-runnable-track {
+      background: linear-gradient(90deg, 
+        var(--c-blue) 0%,   
+        var(--c-cyan) 20%,  
+        var(--c-teal) 35%,  
+        var(--c-green) 50%, 
+        var(--c-yellow) 65%,
+        var(--c-orange) 80%,
+        var(--c-red) 100%
+      );
+    }
+
     input[type=range]::-webkit-slider-thumb {
       height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 2px solid var(--muted);
       -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
-    /* النصوص تحت المسطرة */
+    /* النصوص تحت المسطرة - تنقلب تلقائياً بسبب Flexbox */
     .scale-labels {
       display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 0px;
-      direction: rtl; /* عشان العنصر الأول يكون يمين */
+      /* direction يتبع الصفحة، فبالعربي الأول يمين، بالإنجليزي الأول يسار */
     }
-    /* بدون Order وبدون تعقيد: الأول يمين، الأخير يسار */
-
 
     /* باقي البطاقات */
     .target-box {
@@ -176,11 +233,25 @@
       <div class="input-grid">
         <div class="field">
           <label id="lab-gender">الجنس</label>
-          <select id="gender"><option value="male">ذكر</option><option value="female">أنثى</option></select>
+          <select id="gender">
+              <option value="male" id="opt-male">ذكر</option>
+              <option value="female" id="opt-female">أنثى</option>
+          </select>
         </div>
         <div class="field"><label id="lab-age">العمر</label><input id="age" type="text" inputmode="decimal"></div>
         <div class="field"><label id="lab-weight">الوزن (kg)</label><input id="weight" type="text" inputmode="decimal"></div>
         <div class="field"><label id="lab-height">الطول (cm)</label><input id="height" type="text" inputmode="decimal"></div>
+        
+        <div class="field field-full">
+            <label class="switch-field">
+                <span class="switch-label" id="lab-sport">مع ممارسة الرياضة</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="is-sport">
+                    <span class="slider"></span>
+                </label>
+            </label>
+        </div>
+
         <div class="field field-full">
             <button id="calc" class="btn">احسب</button>
         </div>
@@ -197,11 +268,9 @@
       <div class="goal-slider-container">
         <div class="goal-label" id="selected-goal">Maintain</div>
         <input type="range" id="goal-slider" min="0" max="6" step="1" value="3">
+        
         <div class="scale-labels" id="slider-labels">
-            <span>تنشيف</span>
-            <span>محافظة</span>
-            <span>تضخيم</span>
-        </div>
+            <span>تنشيف</span> <span>محافظة</span> <span>تضخيم</span> </div>
         <div class="timeline-label" id="val-timeline">—</div>
       </div>
 
@@ -246,43 +315,46 @@
   let weightGlobal = 0;
 
   const goalsData = [
-    // 0: Rapid Cut (-30% to -50%)
-    { id: 'rapid',  en:'Rapid Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:2.0, f_factor:0.5,  w_pct:[-0.0125, -0.0175], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
-    // 1: Cutting (-15% to -30%)
-    { id: 'cut',    en:'Cutting',   ar:'تنشيف',     c_min:-0.30, c_max:-0.15, p:1.9, f_factor:0.6,  w_pct:[-0.005, -0.0125],  timeEn:'8 → 16 weeks', timeAr:'٨ ← ١٦ أسبوع' },
-    // 2: Recomp (-5% to -15%)
-    { id: 'recomp', en:'Recomp.',   ar:'إعادة تشكيل', c_min:-0.15, c_max:-0.05, p:1.8, f_factor:0.65, w_pct:[-0.0025, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
-    // 3: Maintain (0% to -5%)
-    { id: 'maint',  en:'Maintain',  ar:'محافظة',    c_min:-0.05, c_max:0.00,  p:1.7, f_factor:0.7,  w_pct:[0.0025, -0.0025],  timeEn:'Lifelong',    timeAr:'نمط حياة' },
-    // 4: MainGain (0% to +5%)
-    { id: 'gain',   en:'MainGain',  ar:'بناء محافظ', c_min:0.00,  c_max:0.05,  p:1.6, f_factor:0.75, w_pct:[0, 0.0025],      timeEn:'6 → 12 months',timeAr:'٦ ← ١٢ شهر' },
-    // 5: Lean Bulk (+5% to +10%)
-    { id: 'lean',   en:'Lean Bulk', ar:'تضخيم صافي',c_min:0.05,  c_max:0.10,  p:1.5, f_factor:0.8,  w_pct:[0.0025, 0.005],  timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
-    // 6: Bulking (+10% to +25%)
-    { id: 'bulk',   en:'Bulking',   ar:'تضخيم',     c_min:0.10,  c_max:0.25,  p:1.4, f_factor:0.9,  w_pct:[0.005, 0.01],    timeEn:'3 → 5 months', timeAr:'٣ ← ٥ أشهر' }
+    // 0: Aggressive Cut
+    { id: 'agg_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:2.2, f_factor:0.5,  w_pct:[-0.01, -0.015], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
+    // 1: Cutting
+    { id: 'cut',     en:'Cutting',        ar:'تنشيف',     c_min:-0.30, c_max:-0.10, p:2.1, f_factor:0.6,  w_pct:[-0.002, -0.01], timeEn:'8 → 16 weeks', timeAr:'٨ ← ١٦ أسبوع' },
+    // 2: Recomp
+    { id: 'recomp',  en:'Recomp.',        ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p:2.0, f_factor:0.65, w_pct:[-0.0015, -0.002], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    // 3: Maintain
+    { id: 'maint',   en:'Maintain',       ar:'محافظة',    c_min:-0.05, c_max:0.05,  p:1.9, f_factor:0.7,  w_pct:[0.0015, -0.0015],  timeEn:'Lifelong',    timeAr:'نمط حياة' },
+    // 4: Lean Bulk
+    { id: 'lean',    en:'Lean Bulk',      ar:'تضخيم صافي',c_min:0.05,  c_max:0.10,  p:1.8, f_factor:0.75, w_pct:[0.0015, 0.0025],  timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' },
+    // 5: Bulking
+    { id: 'bulk',    en:'Bulking',        ar:'تضخيم',     c_min:0.10,  c_max:0.20,  p:1.7, f_factor:0.8,  w_pct:[0.0025, 0.005],  timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
+    // 6: Aggressive Bulk
+    { id: 'agg_bulk',en:'Aggressive Bulk',ar:'تضخيم قوي', c_min:0.20,  c_max:0.50,  p:1.6, f_factor:0.9,  w_pct:[0.005, 0.0125],  timeEn:'3 → 5 months', timeAr:'٣ ← ٥ أشهر' }
   ];
 
   const goalColors = [
-    'var(--c-red)',    // 0: تنشيف قاسي (يمين)
+    'var(--c-red)',    // 0: تنشيف قاسي
     'var(--c-orange)', // 1: تنشيف
     'var(--c-yellow)', // 2: إعادة تشكيل
-    'var(--c-green)',  // 3: محافظة (وسط)
-    'var(--c-teal)',   // 4: بناء محافظ
-    'var(--c-cyan)',   // 5: تضخيم صافي
-    'var(--c-blue)'    // 6: تضخيم (يسار)
+    'var(--c-green)',  // 3: محافظة
+    'var(--c-teal)',   // 4: تضخيم صافي
+    'var(--c-cyan)',   // 5: تضخيم
+    'var(--c-blue)'    // 6: تضخيم قوي
   ];
 
   const i18n = {
     ar: {
       dir:"rtl", title:"مخطط السعرات الذكي", gender:"الجنس", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
+      optMale:"ذكر", optFemale:"أنثى", // ترجمة الخيارات
+      sport:"مع ممارسة الرياضة",
       maintT:"سعرات المحافظة", target:"نطاق السعرات", wChange:"التغير المتوقع",
       p:"بروتين", f:"دهون", c:"كارب", pSub:"حد أدنى",
-      // هنا الترتيب حسب ظهورهم في HTML (من اليمين لليسار في RTL)
       sl_1:"تنشيف", sl_2:"محافظة", sl_3:"تضخيم",
       rights:"© 2025 — جميع الحقوق محفوظة",
     },
     en: {
       dir:"ltr", title:"Smart Calorie Planner", gender:"Gender", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
+      optMale:"Male", optFemale:"Female", // ترجمة الخيارات
+      sport:"Include Exercise",
       maintT:"Maintenance TDEE", target:"Calorie Range", wChange:"Exp. Change",
       p:"Protein", f:"Fat", c:"Carbs", pSub:"Minimum",
       sl_1:"Cut", sl_2:"Maintain", sl_3:"Bulk", 
@@ -300,7 +372,13 @@
     $('lab-age').textContent = t.age;
     $('lab-weight').textContent = t.weight;
     $('lab-height').textContent = t.height;
+    $('lab-sport').textContent = t.sport;
     $('calc').textContent = t.calc;
+    
+    // تحديث خيارات الجنس
+    $('opt-male').textContent = t.optMale;
+    $('opt-female').textContent = t.optFemale;
+
     $('msg-maintenance').textContent = t.maintT;
     $('lab-target-cals').textContent = t.target;
     $('lab-weight-change').textContent = t.wChange;
@@ -310,16 +388,14 @@
     $('sub-prot').textContent = t.pSub;
     $('copyright').textContent = t.rights;
 
-
     const sl = $('slider-labels');
-    // تعيين النصوص مباشرة 
-    // العنصر الأول = يمين
-    sl.children[0].textContent = t.sl_1;
-    // العنصر الثاني = وسط
-    sl.children[1].textContent = t.sl_2;
-    // العنصر الثالث = يسار
-    sl.children[2].textContent = t.sl_3;
-
+    // النصوص تنعكس أماكنها تلقائياً بسبب Flexbox + Direction
+    // في العربي (RTL): العنصر الأول يكون يمين.
+    // في الإنجليزي (LTR): العنصر الأول يكون يسار.
+    // لذلك يجب أن نضع "Cut" كعنصر أول دائماً ليظهر في المكان الصحيح حسب اللغة
+    sl.children[0].textContent = t.sl_1; // Cut/تنشيف
+    sl.children[1].textContent = t.sl_2; // Maintain/محافظة
+    sl.children[2].textContent = t.sl_3; // Bulk/تضخيم
 
     $('btn-ar').classList.toggle('active', lang==='ar');
     $('btn-en').classList.toggle('active', lang==='en');
@@ -371,12 +447,20 @@
     const w = parseFloat(normalize($('weight').value));
     const h = parseFloat(normalize($('height').value));
     const g = $('gender').value;
+    const isSporty = $('is-sport').checked;
 
     if(!age || !w || !h) return;
     weightGlobal = w;
     
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
-    tdeeGlobal = Math.round(base * 1.35);
+    
+    // تعديل المضاعف حسب الطلب:
+    // بدون رياضة (افتراضي) = 1.35
+    // مع رياضة = 1.5
+    const multiplier = isSporty ? 1.5 : 1.35;
+    
+    // تقريب الناتج لأقرب 50
+    tdeeGlobal = Math.round((base * multiplier) / 50) * 50;
 
     $('tdee-val').textContent = tdeeGlobal;
     $('result-card').classList.add('show');
@@ -402,7 +486,8 @@
 
     // 2. Timeline
     $('val-timeline').textContent = currentLang === 'ar' ? data.timeAr : data.timeEn;
-    if(currentLang === 'ar') $('val-timeline').style.direction = 'rtl';
+    // التأكد من اتجاه نص الوقت
+    $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
     // 3. Calories Range
     const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/50)*50;
