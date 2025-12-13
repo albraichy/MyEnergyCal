@@ -82,32 +82,24 @@
     }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     
-    /* المسار الخلفي للزر */
     .slider {
       position: absolute; cursor: pointer; inset: 0;
       background-color: var(--input-border); border-radius: 34px;
       transition: .4s;
     }
-    /* الدائرة البيضاء */
     .slider:before {
       position: absolute; content: ""; height: 20px; width: 20px;
       bottom: 3px; background-color: white; border-radius: 50%; transition: .4s;
-      /* الوضع الافتراضي LTR: الدائرة تكون يسار */
       left: 3px; 
     }
 
-    /* --- تعديلات RTL للزر --- */
     html[dir="rtl"] .slider:before {
-        left: auto; right: 3px; /* بالعربي تكون يمين */
+        left: auto; right: 3px; 
     }
 
-    /* حالة التفعيل */
     input:checked + .slider { background-color: var(--accent); }
 
-    /* حركة التحريك عند التفعيل (LTR) */
     html[dir="ltr"] input:checked + .slider:before { transform: translateX(24px); }
-    
-    /* حركة التحريك عند التفعيل (RTL) - تتحرك لليسار */
     html[dir="rtl"] input:checked + .slider:before { transform: translateX(-24px); }
 
 
@@ -141,10 +133,9 @@
       -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer;
     }
 
-    /* --- تدرج الألوان الذكي حسب اللغة --- */
+    /* تدرج الألوان الذكي حسب اللغة */
     input[type=range]::-webkit-slider-runnable-track {
       width: 100%; height: 10px; border-radius: 5px;
-      /* الافتراضي (LTR): أحمر يسار -> أزرق يمين */
       background: linear-gradient(90deg, 
         var(--c-red) 0%,   
         var(--c-orange) 20%,
@@ -156,7 +147,6 @@
       );
     }
 
-    /* تعديل التدرج للعربي (RTL): أزرق يسار -> أحمر يمين (عكسناه عشان يطابق المنطق) */
     html[dir="rtl"] input[type=range]::-webkit-slider-runnable-track {
       background: linear-gradient(90deg, 
         var(--c-blue) 0%,   
@@ -174,10 +164,8 @@
       -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
-    /* النصوص تحت المسطرة - تنقلب تلقائياً بسبب Flexbox */
     .scale-labels {
       display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 0px;
-      /* direction يتبع الصفحة، فبالعربي الأول يمين، بالإنجليزي الأول يسار */
     }
 
     /* باقي البطاقات */
@@ -270,7 +258,10 @@
         <input type="range" id="goal-slider" min="0" max="6" step="1" value="3">
         
         <div class="scale-labels" id="slider-labels">
-            <span>تنشيف</span> <span>محافظة</span> <span>تضخيم</span> </div>
+            <span>تنشيف</span> 
+            <span>محافظة</span> 
+            <span>تضخيم</span> 
+        </div>
         <div class="timeline-label" id="val-timeline">—</div>
       </div>
 
@@ -314,21 +305,65 @@
   let tdeeGlobal = 0;
   let weightGlobal = 0;
 
+  // w_no_sport: النسب بدون رياضة
+  // w_sport: النسب مع رياضة
   const goalsData = [
     // 0: Aggressive Cut
-    { id: 'agg_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:2.2, f_factor:0.5,  w_pct:[-0.01, -0.015], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
+    { 
+        id: 'agg_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', 
+        c_min:-0.50, c_max:-0.30, 
+        p:2.2, f_factor:0.5,  
+        w_no_sport:[-0.0068, -0.02], w_sport:[-0.0076, -0.0222], // تم تعديل 68% و 76% لتكون قيم منطقية (0.68%)
+        timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
+    },
     // 1: Cutting
-    { id: 'cut',     en:'Cutting',        ar:'تنشيف',     c_min:-0.30, c_max:-0.10, p:2.1, f_factor:0.6,  w_pct:[-0.002, -0.01], timeEn:'8 → 16 weeks', timeAr:'٨ ← ١٦ أسبوع' },
+    { 
+        id: 'cut', en:'Cutting', ar:'تنشيف',     
+        c_min:-0.30, c_max:-0.10, 
+        p:2.1, f_factor:0.6,  
+        w_no_sport:[-0.0023, -0.012], w_sport:[-0.0026, -0.0133], 
+        timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
+    },
     // 2: Recomp
-    { id: 'recomp',  en:'Recomp.',        ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p:2.0, f_factor:0.65, w_pct:[-0.0015, -0.002], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    { 
+        id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
+        c_min:-0.10, c_max:-0.05, 
+        p:2.0, f_factor:0.65, 
+        w_no_sport:[-0.0011, -0.004], w_sport:[-0.0012, -0.0044], 
+        timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
+    },
     // 3: Maintain
-    { id: 'maint',   en:'Maintain',       ar:'محافظة',    c_min:-0.05, c_max:0.05,  p:1.9, f_factor:0.7,  w_pct:[0.0015, -0.0015],  timeEn:'Lifelong',    timeAr:'نمط حياة' },
+    { 
+        id: 'maint', en:'Maintain', ar:'محافظة',    
+        c_min:-0.05, c_max:0.05,  
+        p:1.9, f_factor:0.7,  
+        w_no_sport:[0.002, -0.002], w_sport:[0.0022, -0.0022],  
+        timeEn:'Lifelong', timeAr:'نمط حياة' 
+    },
     // 4: Lean Bulk
-    { id: 'lean',    en:'Lean Bulk',      ar:'تضخيم صافي',c_min:0.05,  c_max:0.10,  p:1.8, f_factor:0.75, w_pct:[0.0015, 0.0025],  timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' },
+    { 
+        id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
+        c_min:0.05,  c_max:0.10,  
+        p:1.8, f_factor:0.75, 
+        w_no_sport:[0.0011, 0.004], w_sport:[0.0012, 0.0044],  
+        timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
+    },
     // 5: Bulking
-    { id: 'bulk',    en:'Bulking',        ar:'تضخيم',     c_min:0.10,  c_max:0.20,  p:1.7, f_factor:0.8,  w_pct:[0.0025, 0.005],  timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
+    { 
+        id: 'bulk', en:'Bulking', ar:'تضخيم',     
+        c_min:0.10,  c_max:0.20,  
+        p:1.7, f_factor:0.8,  
+        w_no_sport:[0.0023, 0.008], w_sport:[0.0026, 0.0089],  
+        timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
+    },
     // 6: Aggressive Bulk
-    { id: 'agg_bulk',en:'Aggressive Bulk',ar:'تضخيم قوي', c_min:0.20,  c_max:0.50,  p:1.6, f_factor:0.9,  w_pct:[0.005, 0.0125],  timeEn:'3 → 5 months', timeAr:'٣ ← ٥ أشهر' }
+    { 
+        id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
+        c_min:0.20,  c_max:0.50,  
+        p:1.6, f_factor:0.9,  
+        w_no_sport:[0.0045, 0.02], w_sport:[0.005, 0.0222],  
+        timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
+    }
   ];
 
   const goalColors = [
@@ -344,7 +379,7 @@
   const i18n = {
     ar: {
       dir:"rtl", title:"مخطط السعرات الذكي", gender:"الجنس", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
-      optMale:"ذكر", optFemale:"أنثى", // ترجمة الخيارات
+      optMale:"ذكر", optFemale:"أنثى",
       sport:"مع ممارسة الرياضة",
       maintT:"سعرات المحافظة", target:"نطاق السعرات", wChange:"التغير المتوقع",
       p:"بروتين", f:"دهون", c:"كارب", pSub:"حد أدنى",
@@ -353,7 +388,7 @@
     },
     en: {
       dir:"ltr", title:"Smart Calorie Planner", gender:"Gender", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
-      optMale:"Male", optFemale:"Female", // ترجمة الخيارات
+      optMale:"Male", optFemale:"Female",
       sport:"Include Exercise",
       maintT:"Maintenance TDEE", target:"Calorie Range", wChange:"Exp. Change",
       p:"Protein", f:"Fat", c:"Carbs", pSub:"Minimum",
@@ -375,7 +410,6 @@
     $('lab-sport').textContent = t.sport;
     $('calc').textContent = t.calc;
     
-    // تحديث خيارات الجنس
     $('opt-male').textContent = t.optMale;
     $('opt-female').textContent = t.optFemale;
 
@@ -389,13 +423,9 @@
     $('copyright').textContent = t.rights;
 
     const sl = $('slider-labels');
-    // النصوص تنعكس أماكنها تلقائياً بسبب Flexbox + Direction
-    // في العربي (RTL): العنصر الأول يكون يمين.
-    // في الإنجليزي (LTR): العنصر الأول يكون يسار.
-    // لذلك يجب أن نضع "Cut" كعنصر أول دائماً ليظهر في المكان الصحيح حسب اللغة
-    sl.children[0].textContent = t.sl_1; // Cut/تنشيف
-    sl.children[1].textContent = t.sl_2; // Maintain/محافظة
-    sl.children[2].textContent = t.sl_3; // Bulk/تضخيم
+    sl.children[0].textContent = t.sl_1; 
+    sl.children[1].textContent = t.sl_2; 
+    sl.children[2].textContent = t.sl_3; 
 
     $('btn-ar').classList.toggle('active', lang==='ar');
     $('btn-en').classList.toggle('active', lang==='en');
@@ -454,12 +484,11 @@
     
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
     
-    // تعديل المضاعف حسب الطلب:
+    // تعديل المضاعف:
     // بدون رياضة (افتراضي) = 1.35
     // مع رياضة = 1.5
     const multiplier = isSporty ? 1.5 : 1.35;
     
-    // تقريب الناتج لأقرب 50
     tdeeGlobal = Math.round((base * multiplier) / 50) * 50;
 
     $('tdee-val').textContent = tdeeGlobal;
@@ -486,7 +515,6 @@
 
     // 2. Timeline
     $('val-timeline').textContent = currentLang === 'ar' ? data.timeAr : data.timeEn;
-    // التأكد من اتجاه نص الوقت
     $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
     // 3. Calories Range
@@ -496,9 +524,12 @@
     if(c1 === c2) $('val-target-cals').textContent = c1;
     else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "");
 
-    // 4. Weight Change
-    const w1 = weightGlobal * data.w_pct[0];
-    const w2 = weightGlobal * data.w_pct[1];
+    // 4. Weight Change - اختيار النسبة بناءً على تفعيل الرياضة
+    const isSporty = $('is-sport').checked;
+    const wPct = isSporty ? data.w_sport : data.w_no_sport;
+    
+    const w1 = weightGlobal * wPct[0];
+    const w2 = weightGlobal * wPct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
 
     // 5. Macros
@@ -523,6 +554,13 @@
 
   $('calc').addEventListener('click', calculateTDEE);
   $('goal-slider').addEventListener('input', updatePlan);
+  // عند تغيير خيار الرياضة نعيد تحديث الخطة فوراً إذا كانت النتائج ظاهرة
+  $('is-sport').addEventListener('change', () => {
+      if(tdeeGlobal > 0) {
+          calculateTDEE(); // إعادة حساب TDEE لأن المضاعف يتغير
+      }
+  });
+  
   $('btn-ar').addEventListener('click', ()=>setLang('ar'));
   $('btn-en').addEventListener('click', ()=>setLang('en'));
 
