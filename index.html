@@ -310,7 +310,7 @@
     { 
         id: 'mini_cut', en:'Mini-Cut', ar:'ميني كت', 
         c_min:-0.50, c_max:-0.30, 
-        p:2.0, f_factor:0.5,  
+        p:1.8, f_factor:0.5, // البروتين صار 1.8 
         w_pct:[-0.01, -0.0125], 
         timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
     },
@@ -318,7 +318,7 @@
     { 
         id: 'cut', en:'Cutting', ar:'تنشيف',     
         c_min:-0.30, c_max:-0.10, 
-        p:1.8, f_factor:0.6,  
+        p:1.8, f_factor:0.6, // البروتين 1.8 
         w_pct:[-0.005, -0.01], 
         timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
     },
@@ -326,7 +326,7 @@
     { 
         id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
         c_min:-0.10, c_max:-0.05, 
-        p:1.6, f_factor:0.7, 
+        p:1.6, f_factor:0.7, // البروتين 1.6
         w_pct:[-0.001, -0.005], 
         timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
     },
@@ -334,7 +334,7 @@
     { 
         id: 'maint', en:'Maintain', ar:'محافظة',    
         c_min:-0.05, c_max:0.05,  
-        p:1.4, f_factor:0.75,  
+        p:1.4, f_factor:0.75, // البروتين 1.4 
         w_pct:[0.0015, -0.001], 
         timeEn:'Lifelong', timeAr:'نمط حياة' 
     },
@@ -342,7 +342,7 @@
     { 
         id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
         c_min:0.05,  c_max:0.10,  
-        p:1.6, f_factor:0.8, 
+        p:1.6, f_factor:0.8, // البروتين 1.6
         w_pct:[0.0015, 0.0025], 
         timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
     },
@@ -350,7 +350,7 @@
     { 
         id: 'bulk', en:'Bulking', ar:'تضخيم',     
         c_min:0.10,  c_max:0.20,  
-        p:1.8, f_factor:0.9,  
+        p:1.8, f_factor:0.9, // البروتين 1.8 
         w_pct:[0.0025, 0.005], 
         timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
     },
@@ -358,7 +358,7 @@
     { 
         id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
         c_min:0.20,  c_max:0.50,  
-        p:2.0, f_factor:1.0,  
+        p:2.0, f_factor:1.0, // البروتين 2.0 
         w_pct:[0.005, 0.015], 
         timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
     }
@@ -431,8 +431,15 @@
     updatePlan();
   }
 
+  // --- التعديل هنا: دالة للمعالجة الذكية للأرقام ---
   function normalize(str){
-    return str.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9.]/g,'');
+    // 1. تحويل الأرقام العربية إلى إنجليزية
+    // 2. استبدال الفاصلة العربية (،) والفاصلة العادية (,) بنقطة (.)
+    // 3. إزالة أي حرف غير رقمي أو نقطة
+    return str
+      .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)) 
+      .replace(/[،,]/g, '.') 
+      .replace(/[^0-9.]/g,'');
   }
 
   function formatRangeHTML(val1, val2, unit){
