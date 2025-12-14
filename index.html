@@ -249,7 +249,7 @@
     <section class="card result" id="result-card">
       
       <div class="rbox">
-        <h3 class="rtitle" id="msg-maintenance">سعرات المحافظة</h3>
+        <h3 class="rtitle" id="msg-maintenance">إجمالي الطاقة اليومية</h3>
         <div class="rvalue val-num" style="font-size:24px; font-weight:700" id="tdee-val">—</div>
       </div>
 
@@ -305,14 +305,13 @@
   let tdeeGlobal = 0;
   let weightGlobal = 0;
 
-  // البيانات المحدثة حسب الجدول الجديد
   const goalsData = [
-    // 0: Mini-Cut (Aggressive Cut سابقا)
+    // 0: Mini-Cut
     { 
         id: 'mini_cut', en:'Mini-Cut', ar:'ميني كت', 
         c_min:-0.50, c_max:-0.30, 
         p:2.0, f_factor:0.5,  
-        w_pct:[-0.01, -0.0125], // -1% to -1.25%
+        w_pct:[-0.01, -0.0125], 
         timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
     },
     // 1: Cutting
@@ -320,7 +319,7 @@
         id: 'cut', en:'Cutting', ar:'تنشيف',     
         c_min:-0.30, c_max:-0.10, 
         p:1.8, f_factor:0.6,  
-        w_pct:[-0.005, -0.01], // -0.5% to -1%
+        w_pct:[-0.005, -0.01], 
         timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
     },
     // 2: Recomp
@@ -328,7 +327,7 @@
         id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
         c_min:-0.10, c_max:-0.05, 
         p:1.6, f_factor:0.7, 
-        w_pct:[-0.001, -0.005], // -0.1% to -0.5%
+        w_pct:[-0.001, -0.005], 
         timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
     },
     // 3: Maintain
@@ -336,7 +335,7 @@
         id: 'maint', en:'Maintain', ar:'محافظة',    
         c_min:-0.05, c_max:0.05,  
         p:1.4, f_factor:0.75,  
-        w_pct:[0.0015, -0.001], // +0.15% to -0.1% 
+        w_pct:[0.0015, -0.001], 
         timeEn:'Lifelong', timeAr:'نمط حياة' 
     },
     // 4: Lean Bulk
@@ -344,7 +343,7 @@
         id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
         c_min:0.05,  c_max:0.10,  
         p:1.6, f_factor:0.8, 
-        w_pct:[0.0015, 0.0025], // +0.15% to +0.25%
+        w_pct:[0.0015, 0.0025], 
         timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
     },
     // 5: Bulking
@@ -352,7 +351,7 @@
         id: 'bulk', en:'Bulking', ar:'تضخيم',     
         c_min:0.10,  c_max:0.20,  
         p:1.8, f_factor:0.9,  
-        w_pct:[0.0025, 0.005], // +0.25% to +0.5%
+        w_pct:[0.0025, 0.005], 
         timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
     },
     // 6: Aggressive Bulk
@@ -360,7 +359,7 @@
         id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
         c_min:0.20,  c_max:0.50,  
         p:2.0, f_factor:1.0,  
-        w_pct:[0.005, 0.015], // +0.5% to +1.5%
+        w_pct:[0.005, 0.015], 
         timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
     }
   ];
@@ -380,7 +379,7 @@
       dir:"rtl", title:"مخطط السعرات الذكي", gender:"الجنس", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
       optMale:"ذكر", optFemale:"أنثى",
       sport:"مع ممارسة الرياضة",
-      maintT:"سعرات المحافظة", target:"نطاق السعرات", wChange:"التغير المتوقع",
+      maintT:"إجمالي الطاقة اليومية", target:"نطاق السعرات", wChange:"التغير المتوقع",
       p:"بروتين", f:"دهون", c:"كارب", pSub:"حد أدنى",
       sl_1:"تنشيف", sl_2:"محافظة", sl_3:"تضخيم",
       rights:"© 2025 — جميع الحقوق محفوظة",
@@ -389,7 +388,7 @@
       dir:"ltr", title:"Smart Calorie Planner", gender:"Gender", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
       optMale:"Male", optFemale:"Female",
       sport:"Include Exercise",
-      maintT:"Maintenance TDEE", target:"Calorie Range", wChange:"Exp. Change",
+      maintT:"Total Daily Energy Expenditure", target:"Calorie Range", wChange:"Exp. Change",
       p:"Protein", f:"Fat", c:"Carbs", pSub:"Minimum",
       sl_1:"Cut", sl_2:"Maintain", sl_3:"Bulk", 
       rights:"© 2025 — Smart Planner",
@@ -482,13 +481,10 @@
     weightGlobal = w;
     
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
-    
-    // تعديل المضاعف (لم يتغير المنطق، فقط يتم تطبيقه لحساب السعرات)
-    // بدون رياضة (افتراضي) = 1.35
-    // مع رياضة = 1.5
     const multiplier = isSporty ? 1.5 : 1.35;
     
-    tdeeGlobal = Math.round((base * multiplier) / 50) * 50;
+    // التقريب لأقرب 10
+    tdeeGlobal = Math.round((base * multiplier) / 10) * 10;
 
     $('tdee-val').textContent = tdeeGlobal;
     $('result-card').classList.add('show');
@@ -516,14 +512,14 @@
     $('val-timeline').textContent = currentLang === 'ar' ? data.timeAr : data.timeEn;
     $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
-    // 3. Calories Range
-    const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/50)*50;
-    const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/50)*50;
+    // 3. Calories Range (التقريب لأقرب 10)
+    const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/10)*10;
+    const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/10)*10;
     
     if(c1 === c2) $('val-target-cals').textContent = c1;
     else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "");
 
-    // 4. Weight Change (استخدمنا نسبة واحدة عامة حسب الجدول الجديد)
+    // 4. Weight Change
     const w1 = weightGlobal * data.w_pct[0];
     const w2 = weightGlobal * data.w_pct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
