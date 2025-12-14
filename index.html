@@ -305,69 +305,68 @@
   let tdeeGlobal = 0;
   let weightGlobal = 0;
 
-  // w_no_sport: النسب بدون رياضة
-  // w_sport: النسب مع رياضة
+  // البيانات المحدثة حسب الجدول الجديد
   const goalsData = [
-    // 0: Aggressive Cut
+    // 0: Mini-Cut (Aggressive Cut سابقا)
     { 
-        id: 'agg_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', 
+        id: 'mini_cut', en:'Mini-Cut', ar:'ميني كت', 
         c_min:-0.50, c_max:-0.30, 
-        p:2.2, f_factor:0.5,  
-        w_no_sport:[-0.0068, -0.02], w_sport:[-0.0076, -0.0222], // تم تعديل 68% و 76% لتكون قيم منطقية (0.68%)
+        p:2.0, f_factor:0.5,  
+        w_pct:[-0.01, -0.0125], // -1% to -1.25%
         timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
     },
     // 1: Cutting
     { 
         id: 'cut', en:'Cutting', ar:'تنشيف',     
         c_min:-0.30, c_max:-0.10, 
-        p:2.1, f_factor:0.6,  
-        w_no_sport:[-0.0023, -0.012], w_sport:[-0.0026, -0.0133], 
+        p:1.8, f_factor:0.6,  
+        w_pct:[-0.005, -0.01], // -0.5% to -1%
         timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
     },
     // 2: Recomp
     { 
         id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
         c_min:-0.10, c_max:-0.05, 
-        p:2.0, f_factor:0.65, 
-        w_no_sport:[-0.0011, -0.004], w_sport:[-0.0012, -0.0044], 
+        p:1.6, f_factor:0.7, 
+        w_pct:[-0.001, -0.005], // -0.1% to -0.5%
         timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
     },
     // 3: Maintain
     { 
         id: 'maint', en:'Maintain', ar:'محافظة',    
         c_min:-0.05, c_max:0.05,  
-        p:1.9, f_factor:0.7,  
-        w_no_sport:[0.002, -0.002], w_sport:[0.0022, -0.0022],  
+        p:1.4, f_factor:0.75,  
+        w_pct:[0.0015, -0.001], // +0.15% to -0.1% 
         timeEn:'Lifelong', timeAr:'نمط حياة' 
     },
     // 4: Lean Bulk
     { 
         id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
         c_min:0.05,  c_max:0.10,  
-        p:1.8, f_factor:0.75, 
-        w_no_sport:[0.0011, 0.004], w_sport:[0.0012, 0.0044],  
+        p:1.6, f_factor:0.8, 
+        w_pct:[0.0015, 0.0025], // +0.15% to +0.25%
         timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
     },
     // 5: Bulking
     { 
         id: 'bulk', en:'Bulking', ar:'تضخيم',     
         c_min:0.10,  c_max:0.20,  
-        p:1.7, f_factor:0.8,  
-        w_no_sport:[0.0023, 0.008], w_sport:[0.0026, 0.0089],  
+        p:1.8, f_factor:0.9,  
+        w_pct:[0.0025, 0.005], // +0.25% to +0.5%
         timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
     },
     // 6: Aggressive Bulk
     { 
         id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
         c_min:0.20,  c_max:0.50,  
-        p:1.6, f_factor:0.9,  
-        w_no_sport:[0.0045, 0.02], w_sport:[0.005, 0.0222],  
+        p:2.0, f_factor:1.0,  
+        w_pct:[0.005, 0.015], // +0.5% to +1.5%
         timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
     }
   ];
 
   const goalColors = [
-    'var(--c-red)',    // 0: تنشيف قاسي
+    'var(--c-red)',    // 0: ميني كت
     'var(--c-orange)', // 1: تنشيف
     'var(--c-yellow)', // 2: إعادة تشكيل
     'var(--c-green)',  // 3: محافظة
@@ -484,7 +483,7 @@
     
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
     
-    // تعديل المضاعف:
+    // تعديل المضاعف (لم يتغير المنطق، فقط يتم تطبيقه لحساب السعرات)
     // بدون رياضة (افتراضي) = 1.35
     // مع رياضة = 1.5
     const multiplier = isSporty ? 1.5 : 1.35;
@@ -524,12 +523,9 @@
     if(c1 === c2) $('val-target-cals').textContent = c1;
     else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "");
 
-    // 4. Weight Change - اختيار النسبة بناءً على تفعيل الرياضة
-    const isSporty = $('is-sport').checked;
-    const wPct = isSporty ? data.w_sport : data.w_no_sport;
-    
-    const w1 = weightGlobal * wPct[0];
-    const w2 = weightGlobal * wPct[1];
+    // 4. Weight Change (استخدمنا نسبة واحدة عامة حسب الجدول الجديد)
+    const w1 = weightGlobal * data.w_pct[0];
+    const w2 = weightGlobal * data.w_pct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
 
     // 5. Macros
@@ -554,10 +550,9 @@
 
   $('calc').addEventListener('click', calculateTDEE);
   $('goal-slider').addEventListener('input', updatePlan);
-  // عند تغيير خيار الرياضة نعيد تحديث الخطة فوراً إذا كانت النتائج ظاهرة
   $('is-sport').addEventListener('change', () => {
       if(tdeeGlobal > 0) {
-          calculateTDEE(); // إعادة حساب TDEE لأن المضاعف يتغير
+          calculateTDEE(); 
       }
   });
   
