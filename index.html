@@ -10,7 +10,7 @@
       --bg:#0b0f14; --grad:#121826; --card:#121926; --text:#e6eef8;
       --muted:#94a3b8; --accent:#7dd3fc; --shadow:0 6px 22px rgba(0,0,0,.35);
       --radius:14px; --border:#1f2a3c; --topbar-bg:rgba(18,25,38,.9);
-      --input-bg:#0f172a; --input-border:#1f2937; --subcard-bg:#0c1424;
+      --input-bg:#1e293b; --input-border:#334155; --subcard-bg:#0c1424;
       
       /* الألوان */
       --c-red:    #ef4444; 
@@ -26,7 +26,7 @@
         --bg:#f3f4f6; --grad:#e5e7eb; --card:#ffffff; --text:#020617;
         --muted:#6b7280; --accent:#0ea5e9; --shadow:0 6px 22px rgba(15,23,42,.18);
         --border:#d1d5db; --topbar-bg:rgba(248,250,252,.9);
-        --input-bg:#f9fafb; --input-border:#d1d5db; --subcard-bg:#f9fafb;
+        --input-bg:#ffffff; --input-border:#9ca3af; --subcard-bg:#f9fafb;
       }
     }
 
@@ -57,150 +57,181 @@
     .wrap{width:100%; max-width:860px; margin:0 auto; display:grid; gap:16px; padding:0 12px; flex:1}
     .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
     
-    /* تنسيق الإدخال */
-    .input-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+    .gender-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; }
+    .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; font-size: 15px; color: var(--muted); }
+    .radio-label input[type="radio"] { appearance: none; width: 20px; height: 20px; border: 2px solid var(--muted); border-radius: 50%; outline: none; margin: 0; position: relative; }
+    .radio-label input[type="radio"]:checked { border-color: var(--accent); }
+    .radio-label input[type="radio"]:checked::after { content: ''; position: absolute; inset: 4px; background: var(--accent); border-radius: 50%; }
+    .radio-label input[type="radio"]:checked + span { color: var(--text); }
+    
+    .input-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; align-items: end;} 
     .field{display:flex; flex-direction:column; gap:6px; align-items:center}
     .field-full{grid-column: span 4;}
 
-    label{font-size:13px; color:var(--muted)}
+    .adv-container {
+        grid-column: span 4;
+        display: flex; 
+        justify-content: center; 
+        gap: 12px; 
+        flex-wrap: wrap;
+        margin-top: -4px; padding: 10px; 
+        background: var(--subcard-bg); 
+        border-radius: 12px; 
+        border: 1px solid var(--border);
+    }
+    .adv-container .field { flex: 1; min-width: 80px; max-width: 120px; }
+
+    label{font-size:13px; color:var(--muted); text-align: center; font-weight: 600; margin-bottom: 2px;} 
+    
     input[type="text"], select{
-      width:100%; text-align:center;
-      border:1px solid var(--input-border); background:var(--input-bg); color:var(--text);
-      padding:12px 8px; border-radius:10px; font-size:15px; outline:none; direction:ltr;
+      width:100%; text-align:center; height: 44px;
+      border:1px solid var(--input-border); 
+      background:var(--input-bg); 
+      color:var(--text);
+      padding:0 8px; border-radius:10px; font-size:15px; outline:none; direction:ltr;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.2);
     }
     
-    /* Toggle Switch Style */
-    .switch-field {
-        display: flex; align-items: center; justify-content: center; gap: 12px;
-        background: var(--subcard-bg); padding: 12px; border-radius: 12px;
-        border: 1px solid var(--border); width: 100%; cursor: pointer;
+    .adv-toggle-btn {
+        grid-column: span 4; display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+        color: var(--accent); font-weight: 600; cursor: pointer; padding: 8px 0; font-size: 14px; user-select: none;
     }
-    .switch-label { font-size: 14px; font-weight: 600; color: var(--text); }
+    .adv-toggle-btn:hover { text-decoration: underline; }
+    
+    .switch-wrapper {
+        display: flex; flex-direction: column; align-items: center; gap: 6px; 
+        width: 100%;
+    }
     
     .toggle-switch {
-      position: relative; width: 50px; height: 26px;
+        position: relative; width: 100%; height: 44px; 
+        display: block; cursor: pointer;
     }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     
     .slider {
-      position: absolute; cursor: pointer; inset: 0;
-      background-color: var(--input-border); border-radius: 34px;
-      transition: .4s;
+        position: absolute; cursor: pointer; inset: 0;
+        background-color: var(--input-bg); 
+        border: 1px solid var(--input-border);
+        border-radius: 8px; 
+        transition: .3s;
     }
     .slider:before {
-      position: absolute; content: ""; height: 20px; width: 20px;
-      bottom: 3px; background-color: white; border-radius: 50%; transition: .4s;
-      left: 3px; 
+        position: absolute; content: ""; 
+        height: 34px; width: 34px; 
+        top: 4px; left: 4px; 
+        background-color: var(--muted); opacity: 0.5;
+        border-radius: 6px; 
+        transition: .3s;
+    }
+    html[dir="rtl"] .slider:before { left: auto; right: 4px; }
+
+    input:checked + .slider {
+        background-color: var(--input-bg);
+        border-color: var(--accent);
+    }
+    input:checked + .slider:before {
+        background-color: var(--accent); opacity: 1;
     }
 
-    html[dir="rtl"] .slider:before {
-        left: auto; right: 3px; 
+    html[dir="ltr"] input:checked + .slider:before { 
+        left: calc(100% - 38px); 
+    }
+    html[dir="rtl"] input:checked + .slider:before { 
+        right: calc(100% - 38px);
     }
 
-    input:checked + .slider { background-color: var(--accent); }
-
-    html[dir="ltr"] input:checked + .slider:before { transform: translateX(24px); }
-    html[dir="rtl"] input:checked + .slider:before { transform: translateX(-24px); }
-
-
-    .btn{
-      border:0; border-radius:12px; background:var(--accent); color:#001018;
-      font-weight:800; padding:12px 18px; cursor:pointer; width:100%; margin-top:10px;
-      transition: background 0.3s ease;
-    }
+    .btn{ border:0; border-radius:12px; background:var(--accent); color:#001018; font-weight:800; padding:12px 18px; cursor:pointer; width:100%; margin-top:10px; transition: background 0.3s ease; }
     .btn:hover{filter: brightness(1.1);}
     
-    /* النتائج */
     .result{text-align:center; display:none; gap:12px; padding:16px; border-radius:var(--radius);}
     .result.show{display:grid;}
-    
-    .rbox{
-      background:var(--subcard-bg); padding:10px; border-radius:12px; border:1px solid var(--border);
-    }
+    .rbox{ background:var(--subcard-bg); padding:10px; border-radius:12px; border:1px solid var(--border); }
     .rtitle{margin:0 0 6px; font-size:13px; color:var(--muted);}
     
-    /* المسطرة */
     .goal-slider-container { padding: 10px 0; display:flex; flex-direction: column; gap: 8px; }
-    .goal-label {
-      font-size: 20px; font-weight: 800; margin-bottom: 4px;
-      transition: color 0.3s ease;
-    }
-    .timeline-label {
-        font-size: 14px; color: var(--text); font-weight: 600; opacity: 0.8; direction: inherit; unicode-bidi: embed;
-    }
+    .goal-label { font-size: 20px; font-weight: 800; margin-bottom: 4px; transition: color 0.3s ease; }
+    .timeline-label { font-size: 14px; color: var(--text); font-weight: 600; opacity: 0.8; direction: inherit; unicode-bidi: embed; }
     
-    input[type=range] {
-      -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer;
-    }
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; cursor: pointer; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--c-red) 0%, var(--c-orange) 20%, var(--c-yellow) 35%, var(--c-green) 50%, var(--c-teal) 65%, var(--c-cyan) 80%, var(--c-blue) 100%); }
+    html[dir="rtl"] input[type=range]::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--c-blue) 0%, var(--c-cyan) 20%, var(--c-teal) 35%, var(--c-green) 50%, var(--c-yellow) 65%, var(--c-orange) 80%, var(--c-red) 100%); }
+    input[type=range]::-webkit-slider-thumb { height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 2px solid var(--muted); -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 0px; }
 
-    /* تدرج الألوان الذكي حسب اللغة */
-    input[type=range]::-webkit-slider-runnable-track {
-      width: 100%; height: 10px; border-radius: 5px;
-      background: linear-gradient(90deg, 
-        var(--c-red) 0%,   
-        var(--c-orange) 20%,
-        var(--c-yellow) 35%,
-        var(--c-green) 50%, 
-        var(--c-teal) 65%,  
-        var(--c-cyan) 80%,  
-        var(--c-blue) 100%
-      );
-    }
-
-    html[dir="rtl"] input[type=range]::-webkit-slider-runnable-track {
-      background: linear-gradient(90deg, 
-        var(--c-blue) 0%,   
-        var(--c-cyan) 20%,  
-        var(--c-teal) 35%,  
-        var(--c-green) 50%, 
-        var(--c-yellow) 65%,
-        var(--c-orange) 80%,
-        var(--c-red) 100%
-      );
-    }
-
-    input[type=range]::-webkit-slider-thumb {
-      height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 2px solid var(--muted);
-      -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-
-    .scale-labels {
-      display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 0px;
-    }
-
-    /* باقي البطاقات */
-    .target-box {
-      border: 1px solid var(--accent); background: rgba(14, 165, 233, 0.05);
-      padding: 16px; border-radius: 12px; margin-top: 0;
-    }
+    .target-box { border: 1px solid var(--accent); background: rgba(14, 165, 233, 0.05); padding: 16px; border-radius: 12px; margin-top: 0; }
     .target-val { font-size: 26px; font-weight: 800; color: var(--accent); }
     
-    .macro-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    }
-    .mbox {
-      background: var(--subcard-bg); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap:4px;
-    }
+    .macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .mbox { background: var(--subcard-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap:4px; }
     .mbox-label { font-size: 12px; color: var(--muted); }
     .mbox-val { font-size: 15px; font-weight: 800; white-space: nowrap; }
     .mbox-sub { font-size: 11px; color: var(--muted); opacity: 0.8;}
 
-    .wbox {
-      background: var(--subcard-bg); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
+    .wbox { background: var(--subcard-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .wbox-val { font-size: 16px; font-weight: 700; }
-
-    .range-flex {
-        display: flex; align-items: center; justify-content: center; gap: 6px; direction: inherit;
-    }
-    html[dir="rtl"] .range-flex { flex-direction: row; }
-    html[dir="ltr"] .range-flex { flex-direction: row; }
-
+    .range-flex { display: flex; align-items: center; justify-content: center; gap: 6px; direction: inherit; }
     .val-num { direction: ltr; unicode-bidi: embed; }
     .arrow { font-family: system-ui, sans-serif; font-weight: 700; color: var(--muted); }
 
+    .adv-hidden { display: none; }
+    .adv-visible { display: flex; } 
+    .adv-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .adv-full { grid-column: span 2; }
+    
+    .bf-wrapper {
+        position: relative; width: 100%; height: 60px; margin-top: 24px; margin-bottom: 10px;
+    }
+    .bf-bar-base {
+        position: absolute; top: 0; left: 0; right: 0; height: 32px; border-radius: 8px; overflow: hidden;
+    }
+    .bf-labels-container {
+        position: absolute; top: 0; left: 0; right: 0; height: 32px; pointer-events: none;
+    }
+    .bf-seg-label {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        font-size: 8px; 
+        font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; z-index: 2;
+    }
+    html[dir="rtl"] .bf-seg-label { transform: translate(50%, -50%); }
+    html[lang="ar"] .bf-seg-label { font-size: 10px; }
+
+    .bf-ticks-container {
+        position: absolute; top: 32px; left: 0; right: 0; height: 20px; pointer-events: none;
+    }
+    .bf-tick-group {
+        position: absolute; top: 0; 
+        transform: translateX(-50%); 
+        display: flex; flex-direction: column; align-items: center;
+    }
+    html[dir="rtl"] .bf-tick-group { transform: translateX(50%); }
+
+    .bf-tick-mark { width: 1px; height: 6px; background: var(--muted); opacity: 0.7; }
+    
+    .bf-tick-num { 
+        font-size: 8px; 
+        color: var(--muted); font-weight: 600; margin-top: 2px; 
+        white-space: nowrap;
+        position: absolute; top: 100%;
+        left: 0; text-align: left;
+    }
+    html[dir="rtl"] .bf-tick-num {
+        left: auto; right: 0; text-align: right;
+    }
+
+    .bf-marker {
+        position: absolute; top: -12px; width: 0; height: 0; 
+        border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 10px solid var(--text); 
+        transform: translateX(-50%); transition: all 0.5s ease-out; z-index: 10;
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+    }
+    html[dir="rtl"] .bf-marker { transform: translateX(50%); }
+
+    .cat-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); margin-top: 2px; }
     footer{text-align:center; padding:20px; font-size:12px; color:var(--muted);}
   </style>
 </head>
@@ -218,26 +249,39 @@
 
   <main class="wrap">
     <section class="card">
+      <div class="gender-row">
+          <label class="radio-label">
+              <input type="radio" name="gender" value="male" checked id="rad-male">
+              <span id="txt-male">ذكر</span>
+          </label>
+          <label class="radio-label">
+              <input type="radio" name="gender" value="female" id="rad-female">
+              <span id="txt-female">أنثى</span>
+          </label>
+      </div>
+
       <div class="input-grid">
-        <div class="field">
-          <label id="lab-gender">الجنس</label>
-          <select id="gender">
-              <option value="male" id="opt-male">ذكر</option>
-              <option value="female" id="opt-female">أنثى</option>
-          </select>
-        </div>
         <div class="field"><label id="lab-age">العمر</label><input id="age" type="text" inputmode="decimal"></div>
         <div class="field"><label id="lab-weight">الوزن (kg)</label><input id="weight" type="text" inputmode="decimal"></div>
         <div class="field"><label id="lab-height">الطول (cm)</label><input id="height" type="text" inputmode="decimal"></div>
         
-        <div class="field field-full">
-            <label class="switch-field">
-                <span class="switch-label" id="lab-sport">مع ممارسة الرياضة</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="is-sport">
-                    <span class="slider"></span>
-                </label>
+        <div class="switch-wrapper">
+             <label id="lab-sport">مع رياضة</label>
+             <label class="toggle-switch">
+                <input type="checkbox" id="is-sport">
+                <span class="slider"></span>
             </label>
+        </div>
+
+        <div class="adv-toggle-btn" id="btn-adv-toggle">
+            <span id="lab-adv-text">نتائج متقدمة</span>
+            <span class="adv-icon" id="adv-icon-sym">+</span>
+        </div>
+
+        <div id="adv-inputs" class="adv-container adv-hidden">
+             <div class="field"><label id="lab-neck">الرقبة (cm)</label><input id="neck" type="text" inputmode="decimal"></div>
+             <div class="field"><label id="lab-waist">الخصر (cm)</label><input id="waist" type="text" inputmode="decimal"></div>
+             <div class="field" id="field-hip" style="display:none;"><label id="lab-hip">الأرداف (cm)</label><input id="hip" type="text" inputmode="decimal"></div>
         </div>
 
         <div class="field field-full">
@@ -247,7 +291,6 @@
     </section>
 
     <section class="card result" id="result-card">
-      
       <div class="rbox">
         <h3 class="rtitle" id="msg-maintenance">إجمالي الطاقة اليومية</h3>
         <div class="rvalue val-num" style="font-size:24px; font-weight:700" id="tdee-val">—</div>
@@ -256,11 +299,8 @@
       <div class="goal-slider-container">
         <div class="goal-label" id="selected-goal">Maintain</div>
         <input type="range" id="goal-slider" min="0" max="6" step="1" value="3">
-        
         <div class="scale-labels" id="slider-labels">
-            <span>تنشيف</span> 
-            <span>محافظة</span> 
-            <span>تضخيم</span> 
+            <span>تنشيف</span> <span>محافظة</span> <span>تضخيم</span> 
         </div>
         <div class="timeline-label" id="val-timeline">—</div>
       </div>
@@ -290,8 +330,54 @@
           <div class="rtitle" id="lab-weight-change">تغير متوسط الوزن الاسبوعي المتوقع :</div>
           <div class="wbox-val" id="val-weight-change">—</div>
       </div>
-      
     </section>
+
+    <section class="card result" id="adv-result-card" style="display:none;">
+        <div class="rbox adv-full">
+            <h3 class="rtitle" id="lab-bf-title" style="font-size:16px; color:var(--accent);">نسبة الدهون</h3>
+            <div class="range-flex" style="align-items:center; gap:10px;">
+                <span class="val-num" id="val-bf-pct" style="font-size:28px; font-weight:800; color:var(--text);">—</span>
+                <span class="cat-tag" id="val-bf-cat">—</span>
+            </div>
+            
+            <div class="bf-wrapper" id="bf-wrapper">
+                <div class="bf-marker" id="bf-marker"></div>
+                <div class="bf-bar-base" id="bf-bar-base"></div>
+                <div class="bf-labels-container" id="bf-labels-container"></div>
+                <div class="bf-ticks-container" id="bf-ticks-container"></div>
+            </div>
+        </div>
+
+        <div class="adv-result-grid adv-full">
+            <div class="mbox">
+                <span class="mbox-label" id="lab-fat-mass">كتلة الدهون</span>
+                <span class="mbox-val val-num" id="val-fat-mass">—</span>
+            </div>
+            <div class="mbox">
+                <span class="mbox-label" id="lab-lean-mass">الكتلة العضلية</span>
+                <span class="mbox-val val-num" id="val-lean-mass">—</span>
+            </div>
+        </div>
+
+        <div class="wbox adv-full" style="border-color:var(--c-green); background:rgba(34, 197, 94, 0.05);">
+            <div class="rtitle" id="lab-ideal-w">الوزن المثالي</div>
+            <div class="wbox-val val-num" id="val-ideal-w" style="color:var(--c-green);">—</div>
+        </div>
+
+        <div class="adv-result-grid adv-full">
+            <div class="mbox">
+                <span class="mbox-label" id="lab-ideal-bf-age">الدهون المثالية (للعمر)</span>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span class="mbox-val val-num" id="val-ideal-bf-age" style="color:var(--c-green);">—</span>
+                </div>
+            </div>
+            <div class="mbox">
+                <span class="mbox-label" id="lab-bf-lose">دهون يجب خسارتها</span>
+                <span class="mbox-val val-num" id="val-bf-lose" style="color:var(--c-orange);">—</span>
+            </div>
+        </div>
+    </section>
+
   </main>
   
   <footer>
@@ -304,94 +390,44 @@
   let currentLang = 'ar';
   let tdeeGlobal = 0;
   let weightGlobal = 0;
+  let isAdvExpanded = false;
 
   const goalsData = [
-    // 0: Mini-Cut (1.8P)
-    { 
-        id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', 
-        c_min:-0.50, c_max:-0.30, 
-        p:1.8, f_factor:0.5, 
-        w_pct:[-0.01, -0.0125], 
-        timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
-    },
-    // 1: Cutting (1.8P)
-    { 
-        id: 'cut', en:'Cutting', ar:'تنشيف',     
-        c_min:-0.30, c_max:-0.10, 
-        p:1.8, f_factor:0.6, 
-        w_pct:[-0.005, -0.01], 
-        timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
-    },
-    // 2: Recomp (1.6P)
-    { 
-        id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
-        c_min:-0.10, c_max:-0.05, 
-        p:1.6, f_factor:0.7, 
-        w_pct:[-0.001, -0.005], 
-        timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
-    },
-    // 3: Maintain (1.4P)
-    { 
-        id: 'maint', en:'Maintain', ar:'محافظة',    
-        c_min:-0.05, c_max:0.05,  
-        p:1.4, f_factor:0.75, 
-        w_pct:[0.0015, -0.001], 
-        timeEn:'Lifelong', timeAr:'نمط حياة' 
-    },
-    // 4: Lean Bulk (1.6P)
-    { 
-        id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
-        c_min:0.05,  c_max:0.10,  
-        p:1.6, f_factor:0.8, 
-        w_pct:[0.0015, 0.0025], 
-        timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
-    },
-    // 5: Bulking (1.8P)
-    { 
-        id: 'bulk', en:'Bulking', ar:'تضخيم',     
-        c_min:0.10,  c_max:0.20,  
-        p:1.8, f_factor:0.9, 
-        w_pct:[0.0025, 0.005], 
-        timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
-    },
-    // 6: Aggressive Bulk (2.0P)
-    { 
-        id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
-        c_min:0.20,  c_max:0.50,  
-        p:2.0, f_factor:1.0, 
-        w_pct:[0.005, 0.015], 
-        timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
-    }
+    { id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:1.8, f_factor:0.5, w_pct:[-0.01, -0.0125], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
+    { id: 'cut', en:'Cutting', ar:'تنشيف', c_min:-0.30, c_max:-0.10, p:1.8, f_factor:0.6, w_pct:[-0.005, -0.01], timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' },
+    { id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p:1.6, f_factor:0.7, w_pct:[-0.001, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    { id: 'maint', en:'Maintain', ar:'محافظة', c_min:-0.05, c_max:0.05, p:1.4, f_factor:0.75, w_pct:[0.0015, -0.001], timeEn:'Lifelong', timeAr:'نمط حياة' },
+    { id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي', c_min:0.05, c_max:0.10, p:1.6, f_factor:0.8, w_pct:[0.0015, 0.0025], timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' },
+    { id: 'bulk', en:'Bulking', ar:'تضخيم', c_min:0.10, c_max:0.20, p:1.8, f_factor:0.9, w_pct:[0.0025, 0.005], timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
+    { id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', c_min:0.20, c_max:0.50, p:2.0, f_factor:1.0, w_pct:[0.005, 0.015], timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' }
   ];
 
-  const goalColors = [
-    'var(--c-red)',    // 0: تنشيف قاسي
-    'var(--c-orange)', // 1: تنشيف
-    'var(--c-yellow)', // 2: إعادة تشكيل
-    'var(--c-green)',  // 3: محافظة
-    'var(--c-teal)',   // 4: تضخيم صافي
-    'var(--c-cyan)',   // 5: تضخيم
-    'var(--c-blue)'    // 6: تضخيم قوي
-  ];
+  const goalColors = ['var(--c-red)', 'var(--c-orange)', 'var(--c-yellow)', 'var(--c-green)', 'var(--c-teal)', 'var(--c-cyan)', 'var(--c-blue)'];
 
   const i18n = {
     ar: {
-      dir:"rtl", title:"مخطط السعرات الذكي", gender:"الجنس", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
-      optMale:"ذكر", optFemale:"أنثى",
-      sport:"مع ممارسة الرياضة",
+      dir:"rtl", title:"مخطط السعرات الذكي", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
+      txtMale:"ذكر", txtFemale:"أنثى", sport:"مع رياضة",
       maintT:"إجمالي الطاقة اليومية", target:"نطاق السعرات", wChange:"تغير متوسط الوزن الاسبوعي المتوقع :",
       p:"بروتين", f:"دهون", c:"كارب", pSub:"حد أدنى",
-      sl_1:"تنشيف", sl_2:"محافظة", sl_3:"تضخيم",
-      rights:"© 2025 — جميع الحقوق محفوظة",
+      sl_1:"تنشيف", sl_2:"محافظة", sl_3:"تضخيم", rights:"© 2025 — جميع الحقوق محفوظة",
+      advText: "نتائج متقدمة", neck: "الرقبة (cm)", waist: "الخصر (cm)", hip: "الأرداف (cm)",
+      bfTitle: "نسبة الدهون", fatMass: "كتلة الدهون", leanMass: "الكتلة العضلية", idealW: "الوزن المثالي",
+      catEss: "أساسي", catAth: "رياضي", catFit: "لائق", catAvg: "متوسط", catObese: "سمين",
+      idealBfAge: "الدهون المثالية (للعمر)", bfLose: "دهون يجب خسارتها",
+      // المؤنث
+      catEssF: "أساسية", catAthF: "رياضية", catFitF: "لائقة", catAvgF: "متوسطة", catObeseF: "سمينة"
     },
     en: {
-      dir:"ltr", title:"Smart Calorie Planner", gender:"Gender", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
-      optMale:"Male", optFemale:"Female",
-      sport:"Include Exercise",
+      dir:"ltr", title:"Smart Calorie Planner", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
+      txtMale:"Male", txtFemale:"Female", sport:"Include Exercise",
       maintT:"Total Daily Energy Expenditure", target:"Calorie Range", wChange:"Exp. weekly average weight change :",
       p:"Protein", f:"Fat", c:"Carbs", pSub:"Minimum",
-      sl_1:"Cut", sl_2:"Maintain", sl_3:"Bulk", 
-      rights:"© 2025 — Smart Planner",
+      sl_1:"Cut", sl_2:"Maintain", sl_3:"Bulk", rights:"© 2025 — Smart Planner",
+      advText: "Advanced Results", neck: "Neck (cm)", waist: "Waist (cm)", hip: "Hips (cm)",
+      bfTitle: "Body Fat %", fatMass: "Fat Mass", leanMass: "Lean Mass", idealW: "Ideal Weight",
+      catEss: "Essential", catAth: "Athlete", catFit: "Fitness", catAvg: "Average", catObese: "Obese",
+      idealBfAge: "Ideal Body Fat (Age)", bfLose: "Fat to Lose"
     }
   };
 
@@ -401,16 +437,13 @@
     document.documentElement.lang = lang; 
     document.documentElement.dir = t.dir;
     $('title').textContent = t.title;
-    $('lab-gender').textContent = t.gender;
     $('lab-age').textContent = t.age;
     $('lab-weight').textContent = t.weight;
     $('lab-height').textContent = t.height;
     $('lab-sport').textContent = t.sport;
     $('calc').textContent = t.calc;
-    
-    $('opt-male').textContent = t.optMale;
-    $('opt-female').textContent = t.optFemale;
-
+    $('txt-male').textContent = t.txtMale;
+    $('txt-female').textContent = t.txtFemale;
     $('msg-maintenance').textContent = t.maintT;
     $('lab-target-cals').textContent = t.target;
     $('lab-weight-change').textContent = t.wChange;
@@ -420,6 +453,17 @@
     $('sub-prot').textContent = t.pSub;
     $('copyright').textContent = t.rights;
 
+    $('lab-adv-text').textContent = t.advText;
+    $('lab-neck').textContent = t.neck;
+    $('lab-waist').textContent = t.waist;
+    $('lab-hip').textContent = t.hip;
+    $('lab-bf-title').textContent = t.bfTitle;
+    $('lab-fat-mass').textContent = t.fatMass;
+    $('lab-lean-mass').textContent = t.leanMass;
+    $('lab-ideal-w').textContent = t.idealW;
+    $('lab-ideal-bf-age').textContent = t.idealBfAge;
+    $('lab-bf-lose').textContent = t.bfLose;
+
     const sl = $('slider-labels');
     sl.children[0].textContent = t.sl_1; 
     sl.children[1].textContent = t.sl_2; 
@@ -428,25 +472,16 @@
     $('btn-ar').classList.toggle('active', lang==='ar');
     $('btn-en').classList.toggle('active', lang==='en');
     
-    updatePlan();
+    if(tdeeGlobal > 0) calculateTDEE();
+    else updatePlan(); 
   }
 
-  // --- الحل الجذري والنهائي لمشكلة الفاصلة ---
   function normalize(str){
     if(!str) return "0";
     let s = str.toString();
-    
-    // 1. استبدال جميع أنواع الفواصل (عربية ، وإنجليزية , وعشرية عربية ٫) بنقطة
-    // \u060C هي الفاصلة العربية
-    // \u066B هي الفاصلة العشرية العربية (التي تشبه الفاصلة)
     s = s.replace(/[,،\u060C\u066B]/g, '.');
-    
-    // 2. تحويل الأرقام العربية لإنجليزية
     s = s.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-    
-    // 3. حذف أي حرف ليس رقماً أو نقطة
     s = s.replace(/[^0-9.]/g, '');
-    
     return s;
   }
 
@@ -454,42 +489,273 @@
     let min = Math.min(val1, val2);
     let max = Math.max(val1, val2);
     const arrow = currentLang === 'ar' ? '←' : '→';
-    return `
-        <div class="range-flex">
-            <span class="val-num">${min}</span>
-            <span class="arrow">${arrow}</span>
-            <span class="val-num">${max}${unit ? '<small>'+unit+'</small>' : ''}</span>
-        </div>
-    `;
+    return `<div class="range-flex"><span class="val-num">${min}</span><span class="arrow">${arrow}</span><span class="val-num">${max}${unit ? '<small>'+unit+'</small>' : ''}</span></div>`;
   }
   
   function formatWeightHTML(val1, val2){
-    const abs1 = Math.abs(val1);
-    const abs2 = Math.abs(val2);
-    let startVal, endVal;
-    if(abs1 < abs2) { startVal = val1; endVal = val2; }
-    else { startVal = val2; endVal = val1; }
-    
+    const abs1 = Math.abs(val1); const abs2 = Math.abs(val2);
+    let startVal = abs1 < abs2 ? val1 : val2;
+    let endVal = abs1 < abs2 ? val2 : val1;
     const sStr = (startVal > 0 ? "+" : "") + startVal.toFixed(2);
     const eStr = (endVal > 0 ? "+" : "") + endVal.toFixed(2);
     const arrow = currentLang === 'ar' ? '←' : '→';
-
     if(abs1 < 0.01 && abs2 < 0.01) return `<span class="val-num">~ 0 kg</span>`;
+    return `<div class="range-flex"><span class="val-num">${sStr}</span><span class="arrow">${arrow}</span><span class="val-num">${eStr} kg</span></div>`;
+  }
 
-    return `
-        <div class="range-flex">
-            <span class="val-num">${sStr}</span>
-            <span class="arrow">${arrow}</span>
-            <span class="val-num">${eStr} kg</span>
-        </div>
-    `;
+  function getBodyFatMeta(bf, gender){
+      const t = i18n[currentLang];
+      const isArFemale = (currentLang === 'ar' && gender === 'female');
+      const lbl = (key) => isArFemale ? t[key+'F'] : t[key];
+
+      const cRed = '#ef4444';
+      const cBlue = '#3b82f6'; 
+      const cGreen = '#22c55e';
+      const cYellow = '#eab308';
+
+      if(gender === 'male') {
+          if(bf < 6) return { name: lbl('catEss'), color:cRed }; 
+          if(bf < 14) return { name: lbl('catAth'), color:cBlue }; 
+          if(bf < 18) return { name: lbl('catFit'), color:cGreen }; 
+          if(bf < 25) return { name: lbl('catAvg'), color:cYellow }; 
+          return { name: lbl('catObese'), color:cRed }; 
+      } else {
+          if(bf < 14) return { name: lbl('catEss'), color:cRed };    
+          if(bf < 21) return { name: lbl('catAth'), color:cBlue };   
+          if(bf < 25) return { name: lbl('catFit'), color:cGreen };  
+          if(bf < 32) return { name: lbl('catAvg'), color:cYellow }; 
+          return { name: lbl('catObese'), color:cRed };              
+      }
+  }
+
+  function getIdealBFAge(age, gender){
+      const menData = [
+          {a:20, b:8.5}, {a:25, b:10.5}, {a:30, b:12.7}, {a:35, b:13.7}, 
+          {a:40, b:15.3}, {a:45, b:16.4}, {a:50, b:18.9}, {a:55, b:20.9}, {a:60, b:22.0}
+      ];
+      const womenData = [
+          {a:20, b:17.7}, {a:25, b:18.4}, {a:30, b:19.3}, {a:35, b:21.5}, 
+          {a:40, b:22.2}, {a:45, b:22.9}, {a:50, b:25.2}, {a:55, b:26.3}, {a:60, b:27.5}
+      ];
+
+      const data = gender === 'male' ? menData : womenData;
+
+      if(age <= data[0].a) return data[0].b;
+      if(age >= data[data.length-1].a) return data[data.length-1].b;
+
+      for(let i=0; i < data.length-1; i++){
+          const p1 = data[i];
+          const p2 = data[i+1];
+          if(age >= p1.a && age <= p2.a){
+              const ratio = (age - p1.a) / (p2.a - p1.a);
+              const val = p1.b + ratio * (p2.b - p1.b);
+              return parseFloat(val.toFixed(1));
+          }
+      }
+      return 0; 
+  }
+
+  function renderBodyFatBar(gender, currentBF) {
+      const t = i18n[currentLang];
+      const isArFemale = (currentLang === 'ar' && gender === 'female');
+      const lbl = (key) => isArFemale ? t[key+'F'] : t[key];
+
+      const barBase = $('bf-bar-base');
+      const labelsCont = $('bf-labels-container');
+      const ticksCont = $('bf-ticks-container');
+      const marker = $('bf-marker');
+
+      labelsCont.innerHTML = '';
+      ticksCont.innerHTML = '';
+
+      const cRed = '#ef4444';
+      const cBlue = '#3b82f6';
+      const cGreen = '#22c55e';
+      const cYellow = '#eab308';
+
+      let ranges = [];
+      let maxScale = 0;
+      
+      if(gender === 'male') {
+          maxScale = 45; 
+          ranges = [
+              { label: lbl('catEss'), min:0,  max:6,  color:cRed }, 
+              { label: lbl('catAth'), min:6,  max:14, color:cBlue }, 
+              { label: lbl('catFit'), min:14, max:18, color:cGreen }, 
+              { label: lbl('catAvg'), min:18, max:25, color:cYellow }, 
+              { label: lbl('catObese'), min:25, max:maxScale, color:cRed } 
+          ];
+      } else {
+          maxScale = 55;
+          ranges = [
+              { label: lbl('catEss'), min:0, max:14, color:cRed },      
+              { label: lbl('catAth'), min:14, max:21, color:cBlue },    
+              { label: lbl('catFit'), min:21, max:25, color:cGreen },   
+              { label: lbl('catAvg'), min:25, max:32, color:cYellow },  
+              { label: lbl('catObese'), min:32, max:maxScale, color:cRed } 
+          ];
+      }
+
+      const isRTL = (currentLang === 'ar');
+      const gradDir = isRTL ? 'to left' : 'to right';
+
+      let gradStr = `linear-gradient(${gradDir}`;
+      ranges.forEach((r, i) => {
+          const startPct = (r.min / maxScale) * 100;
+          const endPct = (r.max / maxScale) * 100;
+          const buffer = 1.5; 
+          let solidStart = startPct + buffer;
+          let solidEnd = endPct - buffer;
+          if(i === 0) solidStart = 0;
+          if(i === ranges.length - 1) solidEnd = 100;
+          gradStr += `, ${r.color} ${solidStart.toFixed(1)}%, ${r.color} ${solidEnd.toFixed(1)}%`;
+      });
+      gradStr += ')';
+      barBase.style.background = gradStr;
+
+      ranges.forEach((r, idx) => {
+          const midVal = (r.min + Math.min(r.max, maxScale)) / 2;
+          const midPct = (midVal / maxScale) * 100;
+
+          const label = document.createElement('span');
+          label.className = 'bf-seg-label';
+          label.textContent = r.label;
+          if(isRTL) label.style.right = midPct + "%";
+          else label.style.left = midPct + "%";
+          labelsCont.appendChild(label);
+
+          const startPct = (r.min / maxScale) * 100;
+          const group = document.createElement('div');
+          group.className = 'bf-tick-group';
+          if(isRTL) group.style.right = startPct + "%";
+          else group.style.left = startPct + "%";
+
+          const mark = document.createElement('div');
+          mark.className = 'bf-tick-mark';
+          const num = document.createElement('span');
+          num.className = 'bf-tick-num';
+          num.textContent = r.min + '%';
+          group.appendChild(mark);
+          group.appendChild(num);
+          ticksCont.appendChild(group);
+      });
+
+      let val = currentBF;
+      if(val < 0) val = 0;
+      if(val > maxScale) val = maxScale;
+      const markerPct = (val / maxScale) * 100;
+      
+      marker.style.left = 'auto'; 
+      marker.style.right = 'auto';
+      if(isRTL) marker.style.right = markerPct + "%";
+      else marker.style.left = markerPct + "%";
+  }
+
+  function calculateAdvanced(w, h, gender, age){
+     const card = $('adv-result-card');
+     
+     const neck = parseFloat(normalize($('neck').value));
+     const waist = parseFloat(normalize($('waist').value));
+     const hip = parseFloat(normalize($('hip').value));
+
+     const h_m = h / 100;
+     const minW = 18.5 * (h_m * h_m);
+     const maxW = 24.9 * (h_m * h_m);
+     $('val-ideal-w').innerHTML = formatRangeHTML(minW.toFixed(1), maxW.toFixed(1), " kg");
+
+     let bf = 0;
+     let hasBF = false;
+
+     if(neck && waist && (gender === 'male' || (gender === 'female' && hip))) {
+         if(gender === 'male') {
+             if(waist - neck > 0) {
+                bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(h)) - 450;
+                hasBF = true;
+             }
+         } else {
+             if((waist + hip - neck) > 0) {
+                bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(h)) - 450;
+                hasBF = true;
+             }
+         }
+     }
+
+     if(hasBF && bf > 0) {
+         bf = parseFloat(bf.toFixed(1));
+         $('val-bf-pct').textContent = bf + "%";
+         
+         const meta = getBodyFatMeta(bf, gender);
+         const tag = $('val-bf-cat');
+         tag.textContent = meta.name;
+         tag.style.backgroundColor = meta.color;
+         tag.style.color = '#fff';
+         
+         const fatMass = w * (bf/100);
+         const leanMass = w - fatMass;
+         $('val-fat-mass').textContent = fatMass.toFixed(1) + " kg";
+         $('val-lean-mass').textContent = leanMass.toFixed(1) + " kg";
+         
+         renderBodyFatBar(gender, bf);
+
+         if(age) {
+             const idealBfVal = getIdealBFAge(age, gender);
+             $('val-ideal-bf-age').textContent = idealBfVal + "%";
+             
+             const limitMin = gender === 'male' ? 15 : 20;
+             const limitMax = gender === 'male' ? 20 : 25;
+             const lblElem = $('lab-bf-lose');
+             const valElem = $('val-bf-lose');
+
+             if(bf > limitMax) {
+                 const targetW = leanMass / (1 - (limitMax/100));
+                 const toLose = w - targetW;
+                 lblElem.textContent = currentLang === 'ar' ? "دهون يجب خسارتها" : "Fat to Lose";
+                 valElem.textContent = toLose.toFixed(1) + " kg";
+                 valElem.style.color = 'var(--c-orange)';
+             } else if (bf < limitMin) {
+                 const targetW = leanMass / (1 - (limitMin/100));
+                 const toGain = targetW - w;
+                 lblElem.textContent = currentLang === 'ar' ? "دهون يجب اكتسابها" : "Fat to Gain";
+                 valElem.textContent = toGain.toFixed(1) + " kg";
+                 valElem.style.color = 'var(--c-blue)';
+             } else {
+                 lblElem.textContent = currentLang === 'ar' ? "الحالة" : "Status";
+                 valElem.textContent = currentLang === 'ar' ? "نطاق صحي" : "Healthy Range";
+                 valElem.style.color = 'var(--c-green)';
+             }
+         } else {
+             $('val-ideal-bf-age').textContent = "—";
+             $('val-bf-lose').textContent = "—";
+         }
+     } else {
+         $('val-bf-pct').textContent = "—";
+         $('val-bf-cat').textContent = "—";
+         $('val-bf-cat').style.backgroundColor = 'transparent';
+         $('val-fat-mass').textContent = "—";
+         $('val-lean-mass').textContent = "—";
+         
+         const barBase = $('bf-bar-base');
+         barBase.style.background = 'var(--input-border)';
+         $('bf-marker').style.left = '-100px'; 
+         $('val-ideal-bf-age').textContent = "—";
+         $('val-bf-lose').textContent = "—";
+     }
+
+     if(isAdvExpanded) {
+        card.style.display = 'grid';
+     } else {
+        card.style.display = 'none';
+     }
   }
 
   function calculateTDEE(){
     const age = parseFloat(normalize($('age').value));
     const w = parseFloat(normalize($('weight').value));
     const h = parseFloat(normalize($('height').value));
-    const g = $('gender').value;
+    
+    const maleRad = $('rad-male');
+    const g = maleRad.checked ? 'male' : 'female';
+    
     const isSporty = $('is-sport').checked;
 
     if(!age || !w || !h) return;
@@ -498,12 +764,13 @@
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
     const multiplier = isSporty ? 1.5 : 1.35;
     
-    // التقريب لأقرب 10
-    tdeeGlobal = Math.round((base * multiplier) / 10) * 10;
+    tdeeGlobal = Math.round((base * multiplier) / 5) * 5;
 
     $('tdee-val').textContent = tdeeGlobal;
     $('result-card').classList.add('show');
     $('goal-slider').value = 3;
+    
+    calculateAdvanced(w, h, g, age);
     updatePlan();
   }
 
@@ -513,33 +780,23 @@
     let idx = parseInt($('goal-slider').value);
     const data = goalsData[idx];
 
-    // 1. Color & Title
     const lbl = $('selected-goal');
     lbl.textContent = currentLang === 'ar' ? data.ar : data.en;
-    
-    if(goalColors[idx]) {
-        lbl.style.color = goalColors[idx];
-    } else {
-        lbl.style.color = 'var(--text)';
-    }
+    lbl.style.color = goalColors[idx] ? goalColors[idx] : 'var(--text)';
 
-    // 2. Timeline
     $('val-timeline').textContent = currentLang === 'ar' ? data.timeAr : data.timeEn;
     $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
-    // 3. Calories Range (التقريب لأقرب 10)
-    const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/10)*10;
-    const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/10)*10;
+    const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/5)*5;
+    const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/5)*5;
     
     if(c1 === c2) $('val-target-cals').textContent = c1;
     else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "");
 
-    // 4. Weight Change
     const w1 = weightGlobal * data.w_pct[0];
     const w2 = weightGlobal * data.w_pct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
 
-    // 5. Macros
     const prot = Math.round(weightGlobal * data.p);
     $('val-prot').textContent = prot + "g";
 
@@ -552,20 +809,47 @@
 
     let cLow = Math.round((Math.min(c1, c2) - fixedCals) / 4);
     if(cLow < 0) cLow = 0;
+    cLow = Math.round(cLow / 5) * 5; 
 
     let cHigh = Math.round((Math.max(c1, c2) - fixedCals) / 4);
     if(cHigh < 0) cHigh = 0;
+    cHigh = Math.round(cHigh / 5) * 5; 
     
     $('val-carb').innerHTML = formatRangeHTML(cLow, cHigh, "g");
   }
 
   $('calc').addEventListener('click', calculateTDEE);
   $('goal-slider').addEventListener('input', updatePlan);
-  $('is-sport').addEventListener('change', () => {
-      if(tdeeGlobal > 0) {
-          calculateTDEE(); 
+  $('is-sport').addEventListener('change', () => { if(tdeeGlobal > 0) calculateTDEE(); });
+  
+  $('btn-adv-toggle').addEventListener('click', () => {
+      isAdvExpanded = !isAdvExpanded;
+      const inputs = $('adv-inputs');
+      const icon = $('adv-icon-sym');
+      const results = $('adv-result-card');
+      
+      if(isAdvExpanded) {
+          inputs.classList.remove('adv-hidden');
+          inputs.classList.add('adv-visible');
+          icon.textContent = "−"; 
+          if(tdeeGlobal > 0) calculateTDEE(); 
+      } else {
+          inputs.classList.remove('adv-visible');
+          inputs.classList.add('adv-hidden');
+          icon.textContent = "+";
+          results.style.display = 'none';
       }
   });
+
+  const radios = document.getElementsByName('gender');
+  for(let r of radios) {
+      r.addEventListener('change', (e) => {
+          const hipField = $('field-hip');
+          if(e.target.value === 'female') hipField.style.display = 'flex';
+          else hipField.style.display = 'none';
+          if(tdeeGlobal > 0) calculateTDEE();
+      });
+  }
   
   $('btn-ar').addEventListener('click', ()=>setLang('ar'));
   $('btn-en').addEventListener('click', ()=>setLang('en'));
