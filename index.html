@@ -176,7 +176,7 @@
     .wbox-val { font-size: 16px; font-weight: 700; }
     .range-flex { display: flex; align-items: center; justify-content: center; gap: 6px; direction: inherit; }
     .val-num { direction: ltr; unicode-bidi: embed; }
-    .arrow { font-family: system-ui, sans-serif; font-weight: 700; color: var(--muted); }
+    .arrow { font-family: system-ui, sans-serif; font-weight: 700; color: var(--muted); padding-bottom: 2px; }
 
     .adv-hidden { display: none; }
     .adv-visible { display: flex; } 
@@ -366,7 +366,7 @@
 
         <div class="adv-result-grid adv-full">
             <div class="mbox">
-                <span class="mbox-label" id="lab-ideal-bf-age">الدهون المثالية (للعمر)</span>
+                <span class="mbox-label" id="lab-ideal-bf-age">الدهون المثالية (نطاق صحي)</span>
                 <div style="display:flex; flex-direction:column; align-items:center;">
                     <span class="mbox-val val-num" id="val-ideal-bf-age" style="color:var(--c-green);">—</span>
                 </div>
@@ -393,13 +393,55 @@
   let isAdvExpanded = false;
 
   const goalsData = [
-    { id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p:1.8, f_factor:0.5, w_pct:[-0.01, -0.0125], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
-    { id: 'cut', en:'Cutting', ar:'تنشيف', c_min:-0.30, c_max:-0.10, p:1.8, f_factor:0.6, w_pct:[-0.005, -0.01], timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' },
-    { id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p:1.6, f_factor:0.7, w_pct:[-0.001, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
-    { id: 'maint', en:'Maintain', ar:'محافظة', c_min:-0.05, c_max:0.05, p:1.4, f_factor:0.75, w_pct:[0.0015, -0.001], timeEn:'Lifelong', timeAr:'نمط حياة' },
-    { id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي', c_min:0.05, c_max:0.10, p:1.6, f_factor:0.8, w_pct:[0.0015, 0.0025], timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' },
-    { id: 'bulk', en:'Bulking', ar:'تضخيم', c_min:0.10, c_max:0.20, p:1.8, f_factor:0.9, w_pct:[0.0025, 0.005], timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
-    { id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', c_min:0.20, c_max:0.50, p:2.0, f_factor:1.0, w_pct:[0.005, 0.015], timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' }
+    { 
+        id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', 
+        c_min:-0.50, c_max:-0.30, 
+        p_min:1.8, p_max:1.8, f_min:0.5, f_max:0.5, 
+        w_pct:[-0.01, -0.0125], 
+        timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
+    },
+    { 
+        id: 'cut', en:'Cutting', ar:'تنشيف',     
+        c_min:-0.30, c_max:-0.10, 
+        p_min:1.6, p_max:1.6, f_min:0.6, f_max:1.0, 
+        w_pct:[-0.005, -0.01], 
+        timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
+    },
+    { 
+        id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
+        c_min:-0.10, c_max:-0.05, 
+        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
+        w_pct:[-0.001, -0.005], 
+        timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
+    },
+    { 
+        id: 'maint', en:'Maintain', ar:'محافظة',    
+        c_min:-0.05, c_max:0.05,  
+        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
+        w_pct:[0.0015, -0.001], 
+        timeEn:'Lifelong', timeAr:'نمط حياة' 
+    },
+    { 
+        id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
+        c_min:0.05,  c_max:0.10,  
+        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
+        w_pct:[0.0015, 0.0025], 
+        timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
+    },
+    { 
+        id: 'bulk', en:'Bulking', ar:'تضخيم',     
+        c_min:0.10,  c_max:0.20,  
+        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.25, 
+        w_pct:[0.0025, 0.005], 
+        timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
+    },
+    { 
+        id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
+        c_min:0.20,  c_max:0.50,  
+        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.5, 
+        w_pct:[0.005, 0.015], 
+        timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
+    }
   ];
 
   const goalColors = ['var(--c-red)', 'var(--c-orange)', 'var(--c-yellow)', 'var(--c-green)', 'var(--c-teal)', 'var(--c-cyan)', 'var(--c-blue)'];
@@ -414,8 +456,7 @@
       advText: "نتائج متقدمة", neck: "الرقبة (cm)", waist: "الخصر (cm)", hip: "الأرداف (cm)",
       bfTitle: "نسبة الدهون", fatMass: "كتلة الدهون", leanMass: "الكتلة العضلية", idealW: "الوزن المثالي",
       catEss: "أساسي", catAth: "رياضي", catFit: "لائق", catAvg: "متوسط", catObese: "سمين",
-      idealBfAge: "الدهون المثالية (للعمر)", bfLose: "دهون يجب خسارتها",
-      // المؤنث
+      idealBfAge: "الدهون المثالية (نطاق صحي)", bfLose: "دهون يجب خسارتها",
       catEssF: "أساسية", catAthF: "رياضية", catFitF: "لائقة", catAvgF: "متوسطة", catObeseF: "سمينة"
     },
     en: {
@@ -427,7 +468,7 @@
       advText: "Advanced Results", neck: "Neck (cm)", waist: "Waist (cm)", hip: "Hips (cm)",
       bfTitle: "Body Fat %", fatMass: "Fat Mass", leanMass: "Lean Mass", idealW: "Ideal Weight",
       catEss: "Essential", catAth: "Athlete", catFit: "Fitness", catAvg: "Average", catObese: "Obese",
-      idealBfAge: "Ideal Body Fat (Age)", bfLose: "Fat to Lose"
+      idealBfAge: "Ideal Body Fat (Range)", bfLose: "Fat to Lose"
     }
   };
 
@@ -485,22 +526,59 @@
     return s;
   }
 
-  function formatRangeHTML(val1, val2, unit){
+  // 1. نطاق الدهون (Fat): إجبار الاتجاه بناءً على اللغة
+  function formatFatRangeHTML(val1, val2, unit){
+    const min = Math.min(val1, val2);
+    const max = Math.max(val1, val2);
+    const arrow = currentLang === 'ar' ? '←' : '→';
+    
+    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
+    
+    // تم إضافة الوحدة للرقم الأول أيضا
+    const uStr = unit ? `<small>${unit}</small>` : '';
+    
+    return `<div class="range-flex" style="${dirStyle}">
+        <span class="val-num">${min}${uStr}</span>
+        <span class="arrow">${arrow}</span>
+        <span class="val-num">${max}${uStr}</span>
+    </div>`;
+  }
+
+  // 2. نطاق السعرات والكارب (مع إمكانية عكس السهم)
+  function formatRangeHTML(val1, val2, unit, arrowOverride){
     let min = Math.min(val1, val2);
     let max = Math.max(val1, val2);
-    const arrow = currentLang === 'ar' ? '←' : '→';
-    return `<div class="range-flex"><span class="val-num">${min}</span><span class="arrow">${arrow}</span><span class="val-num">${max}${unit ? '<small>'+unit+'</small>' : ''}</span></div>`;
+    const arrow = arrowOverride ? arrowOverride : (currentLang === 'ar' ? '←' : '→');
+    
+    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
+    const uStr = unit ? `<small>${unit}</small>` : '';
+
+    return `<div class="range-flex" style="${dirStyle}">
+        <span class="val-num">${min}${uStr}</span>
+        <span class="arrow">${arrow}</span>
+        <span class="val-num">${max}${uStr}</span>
+    </div>`;
   }
   
+  // 3. نطاق الوزن (سهم باتجاهين دائماً)
   function formatWeightHTML(val1, val2){
     const abs1 = Math.abs(val1); const abs2 = Math.abs(val2);
-    let startVal = abs1 < abs2 ? val1 : val2;
-    let endVal = abs1 < abs2 ? val2 : val1;
+    let startVal, endVal;
+    if(abs1 < abs2) { startVal = val1; endVal = val2; }
+    else { startVal = val2; endVal = val1; }
+    
     const sStr = (startVal > 0 ? "+" : "") + startVal.toFixed(2);
     const eStr = (endVal > 0 ? "+" : "") + endVal.toFixed(2);
-    const arrow = currentLang === 'ar' ? '←' : '→';
+    const arrow = '↔';
+
     if(abs1 < 0.01 && abs2 < 0.01) return `<span class="val-num">~ 0 kg</span>`;
-    return `<div class="range-flex"><span class="val-num">${sStr}</span><span class="arrow">${arrow}</span><span class="val-num">${eStr} kg</span></div>`;
+
+    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
+    return `<div class="range-flex" style="${dirStyle}">
+        <span class="val-num">${sStr} kg</span>
+        <span class="arrow">${arrow}</span>
+        <span class="val-num">${eStr} kg</span>
+    </div>`;
   }
 
   function getBodyFatMeta(bf, gender){
@@ -526,33 +604,6 @@
           if(bf < 32) return { name: lbl('catAvg'), color:cYellow }; 
           return { name: lbl('catObese'), color:cRed };              
       }
-  }
-
-  function getIdealBFAge(age, gender){
-      const menData = [
-          {a:20, b:8.5}, {a:25, b:10.5}, {a:30, b:12.7}, {a:35, b:13.7}, 
-          {a:40, b:15.3}, {a:45, b:16.4}, {a:50, b:18.9}, {a:55, b:20.9}, {a:60, b:22.0}
-      ];
-      const womenData = [
-          {a:20, b:17.7}, {a:25, b:18.4}, {a:30, b:19.3}, {a:35, b:21.5}, 
-          {a:40, b:22.2}, {a:45, b:22.9}, {a:50, b:25.2}, {a:55, b:26.3}, {a:60, b:27.5}
-      ];
-
-      const data = gender === 'male' ? menData : womenData;
-
-      if(age <= data[0].a) return data[0].b;
-      if(age >= data[data.length-1].a) return data[data.length-1].b;
-
-      for(let i=0; i < data.length-1; i++){
-          const p1 = data[i];
-          const p2 = data[i+1];
-          if(age >= p1.a && age <= p2.a){
-              const ratio = (age - p1.a) / (p2.a - p1.a);
-              const val = p1.b + ratio * (p2.b - p1.b);
-              return parseFloat(val.toFixed(1));
-          }
-      }
-      return 0; 
   }
 
   function renderBodyFatBar(gender, currentBF) {
@@ -661,7 +712,7 @@
      const h_m = h / 100;
      const minW = 18.5 * (h_m * h_m);
      const maxW = 24.9 * (h_m * h_m);
-     $('val-ideal-w').innerHTML = formatRangeHTML(minW.toFixed(1), maxW.toFixed(1), " kg");
+     $('val-ideal-w').innerHTML = formatRangeHTML(minW.toFixed(1), maxW.toFixed(1), " kg", '↔'); 
 
      let bf = 0;
      let hasBF = false;
@@ -698,30 +749,40 @@
          renderBodyFatBar(gender, bf);
 
          if(age) {
-             const idealBfVal = getIdealBFAge(age, gender);
-             $('val-ideal-bf-age').textContent = idealBfVal + "%";
+             // New Realistic Range Logic
+             const safeMin = gender === 'male' ? 10 : 20;
+             const safeMax = gender === 'male' ? 20 : 30;
              
-             const limitMin = gender === 'male' ? 15 : 20;
-             const limitMax = gender === 'male' ? 20 : 25;
+             // Update Ideal BF Label using formatFatRangeHTML to fix Arabic direction
+             $('val-ideal-bf-age').innerHTML = formatFatRangeHTML(safeMin, safeMax, "%");
+             
              const lblElem = $('lab-bf-lose');
              const valElem = $('val-bf-lose');
 
-             if(bf > limitMax) {
-                 const targetW = leanMass / (1 - (limitMax/100));
+             if(bf > safeMax) {
+                 const targetW = leanMass / (1 - (safeMax/100));
                  const toLose = w - targetW;
                  lblElem.textContent = currentLang === 'ar' ? "دهون يجب خسارتها" : "Fat to Lose";
                  valElem.textContent = toLose.toFixed(1) + " kg";
                  valElem.style.color = 'var(--c-orange)';
-             } else if (bf < limitMin) {
-                 const targetW = leanMass / (1 - (limitMin/100));
+             } else if (bf < safeMin) {
+                 const targetW = leanMass / (1 - (safeMin/100));
                  const toGain = targetW - w;
                  lblElem.textContent = currentLang === 'ar' ? "دهون يجب اكتسابها" : "Fat to Gain";
                  valElem.textContent = toGain.toFixed(1) + " kg";
                  valElem.style.color = 'var(--c-blue)';
              } else {
+                 // Inside Safe Range
+                 const midPoint = (safeMin + safeMax) / 2;
                  lblElem.textContent = currentLang === 'ar' ? "الحالة" : "Status";
-                 valElem.textContent = currentLang === 'ar' ? "نطاق صحي" : "Healthy Range";
-                 valElem.style.color = 'var(--c-green)';
+                 
+                 if (bf <= midPoint) {
+                     valElem.textContent = currentLang === 'ar' ? "صحي جداً" : "Very Healthy";
+                     valElem.style.color = 'var(--c-blue)';
+                 } else {
+                     valElem.textContent = currentLang === 'ar' ? "صحي" : "Healthy";
+                     valElem.style.color = 'var(--c-green)';
+                 }
              }
          } else {
              $('val-ideal-bf-age').textContent = "—";
@@ -790,32 +851,45 @@
     const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/5)*5;
     const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/5)*5;
     
+    let calArrow = '↔'; 
+    if (['mini_cut', 'cut', 'recomp'].includes(data.id)) {
+        calArrow = '→'; 
+    } else if (['lean', 'bulk', 'agg_bulk'].includes(data.id)) {
+        calArrow = '←'; 
+    }
+
     if(c1 === c2) $('val-target-cals').textContent = c1;
-    else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "");
+    else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "", calArrow);
 
     const w1 = weightGlobal * data.w_pct[0];
     const w2 = weightGlobal * data.w_pct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
 
-    const prot = Math.round(weightGlobal * data.p);
+    const prot = Math.round(weightGlobal * data.p_min);
     $('val-prot').textContent = prot + "g";
 
-    const fatVal = Math.round(weightGlobal * data.f_factor);
-    $('val-fat').textContent = fatVal + "g";
+    const fatMin = Math.round(weightGlobal * data.f_min);
+    const fatMax = Math.round(weightGlobal * data.f_max);
+    
+    if(fatMin === fatMax) {
+        $('val-fat').textContent = fatMin + "g";
+    } else {
+        $('val-fat').innerHTML = formatFatRangeHTML(fatMin, fatMax, "g");
+    }
 
-    const protCals = prot * 4;
-    const fatCals = fatVal * 9;
-    const fixedCals = protCals + fatCals;
+    const fixedCalsMin = (weightGlobal * data.p_min * 4) + (weightGlobal * data.f_min * 9);
+    const fixedCalsMax = (weightGlobal * data.p_max * 4) + (weightGlobal * data.f_max * 9);
 
-    let cLow = Math.round((Math.min(c1, c2) - fixedCals) / 4);
+    let cHigh = Math.round((Math.max(c1, c2) - fixedCalsMin) / 4);
+    let cLow = Math.round((Math.min(c1, c2) - fixedCalsMax) / 4);
+
     if(cLow < 0) cLow = 0;
-    cLow = Math.round(cLow / 5) * 5; 
-
-    let cHigh = Math.round((Math.max(c1, c2) - fixedCals) / 4);
     if(cHigh < 0) cHigh = 0;
+
+    cLow = Math.round(cLow / 5) * 5; 
     cHigh = Math.round(cHigh / 5) * 5; 
     
-    $('val-carb').innerHTML = formatRangeHTML(cLow, cHigh, "g");
+    $('val-carb').innerHTML = formatRangeHTML(cLow, cHigh, "g", null);
   }
 
   $('calc').addEventListener('click', calculateTDEE);
