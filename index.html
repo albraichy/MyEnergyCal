@@ -1,10 +1,11 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>مخطط السعرات الذكي</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>مخطط السعرات الذكي</title>
+<style>
     :root{
       color-scheme: light dark;
       --bg:#0b0f14; --grad:#121826; --card:#121926; --text:#e6eef8;
@@ -20,7 +21,8 @@
       --c-teal:   #14b8a6; 
       --c-cyan:   #0ea5e9; 
       --c-blue:   #3b82f6; 
-    }
+    
+      --c-purple: #8b5cf6;}
     @media (prefers-color-scheme: light){
       :root{
         --bg:#f3f4f6; --grad:#e5e7eb; --card:#ffffff; --text:#020617;
@@ -68,6 +70,30 @@
     .field{display:flex; flex-direction:column; gap:6px; align-items:center}
     .field-full{grid-column: span 4;}
 
+    .top-inputs{
+      grid-column: span 4;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 140px));
+      justify-content:center;
+      gap:10px;
+      width:100%;
+      align-items:end;
+    }
+    .top-inputs .field{ width:140px; }
+    .top-inputs label{ font-size:12px; }
+    .top-inputs input, .top-inputs select, .adv-container select{
+      width:100%;
+      height:40px;
+      font-size:14px;
+      padding:0 6px;
+    }
+    @media (max-width: 420px){
+      .top-inputs{
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .top-inputs .field{ width:auto; }
+    }
+
     .adv-container {
         grid-column: span 4;
         display: flex; 
@@ -102,50 +128,115 @@
     }
     .adv-toggle-btn:hover { text-decoration: underline; }
     
-    .switch-wrapper {
-        display: flex; flex-direction: column; align-items: center; gap: 6px; 
-        width: 100%;
-    }
     
-    .toggle-switch {
-        position: relative; width: 100%; height: 44px; 
-        display: block; cursor: pointer;
+    /* Mode switch (صحي / رياضي) */
+    .switch-wrapper{
+      grid-column: span 4;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      width:100%;
+      margin-top:2px;
     }
-    .toggle-switch input { opacity: 0; width: 0; height: 0; }
-    
-    .slider {
-        position: absolute; cursor: pointer; inset: 0;
-        background-color: var(--input-bg); 
-        border: 1px solid var(--input-border);
-        border-radius: 8px; 
-        transition: .3s;
-    }
-    .slider:before {
-        position: absolute; content: ""; 
-        height: 34px; width: 34px; 
-        top: 4px; left: 4px; 
-        background-color: var(--muted); opacity: 0.5;
-        border-radius: 6px; 
-        transition: .3s;
-    }
-    html[dir="rtl"] .slider:before { left: auto; right: 4px; }
-
-    input:checked + .slider {
-        background-color: var(--input-bg);
-        border-color: var(--accent);
-    }
-    input:checked + .slider:before {
-        background-color: var(--accent); opacity: 1;
+    .mode-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      direction:rtl;
+      padding:8px 10px;
+      border-radius:999px;
+      background: var(--card);
+      border: 1px solid var(--input-border);
+      box-shadow: 0 10px 22px rgba(0,0,0,.14);
     }
 
-    html[dir="ltr"] input:checked + .slider:before { 
-        left: calc(100% - 38px); 
+    .mode-label{
+      min-width:64px;
+      text-align:center;
+      font-size:13.5px;
+      font-weight:900;
+      padding:7px 12px;
+      border-radius:999px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      transition: .18s ease;
+      user-select:none;
+      line-height:1;
     }
-    html[dir="rtl"] input:checked + .slider:before { 
-        right: calc(100% - 38px);
+    .mode-label.active{
+      background: transparent;
+      color: var(--text);
+      border-color: transparent;
+      box-shadow: none;
+      transform: none;
     }
 
-    .btn{ border:0; border-radius:12px; background:var(--accent); color:#001018; font-weight:800; padding:12px 18px; cursor:pointer; width:100%; margin-top:10px; transition: background 0.3s ease; }
+    .toggle-switch{
+      position: relative;
+      width: 62px;
+      height: 30px;
+      display: inline-block;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .toggle-switch input{ opacity:0; width:0; height:0; }
+
+    .toggle-switch:focus-within .slider{
+      box-shadow: 0 0 0 3px rgba(59,130,246,.22);
+      border-color: var(--accent);
+    }
+.slider{
+  position:absolute; inset:0;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius:999px;
+  transition:.22s ease;
+}
+.slider:before{
+  content:"";
+  position:absolute;
+  width:24px;
+  height:24px;
+  top:2px;
+  background: var(--card);
+  border-radius:999px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 16px rgba(0,0,0,.25), 0 0 0 2px rgba(14,165,233,.10);
+  transition:.22s ease;
+}
+html[dir="rtl"] .slider:before{ right:2px; }
+html[dir="ltr"] .slider:before{ left:2px; }
+
+input:checked + .slider:before{
+  background: var(--card);
+  border-color: var(--accent);
+  box-shadow: 0 8px 16px rgba(0,0,0,.25), 0 0 0 2px rgba(14,165,233,.10);
+}
+
+
+/* unchecked = صحي (يمين) | checked = رياضي (يسار) */
+    html[dir="rtl"] input:checked + .slider:before{ transform: translateX(-34px); }
+    html[dir="ltr"] input:checked + .slider:before{ transform: translateX(34px); }
+
+    .mode-desc{
+      font-size:11.5px;
+      color: var(--muted);
+      text-align:center;
+      line-height:1.5;
+      max-width:560px;
+    }
+
+.btn{ border:0; border-radius:12px; background:var(--accent); color:#001018; font-weight:800; padding:12px 18px; cursor:pointer; width:100%; margin-top:10px; transition: background 0.3s ease; }
+    .btn-grid{display:flex; gap:10px; width:100%;}
+    .btn-grid .btn{flex:1;}
+    .btn-secondary{background:transparent; border:1px solid var(--border); color:var(--text);}
+    .btn-secondary:hover{background:rgba(255,255,255,0.06);}
+    /* زر إعادة التعيين أوضح */
+    #reset.btn-secondary{background:rgba(14,165,233,0.12); border-color:var(--accent);}
+    #reset.btn-secondary:hover{background:rgba(14,165,233,0.20);}
+
     .btn:hover{filter: brightness(1.1);}
     
     .result{text-align:center; display:none; gap:12px; padding:16px; border-radius:var(--radius);}
@@ -161,6 +252,11 @@
     input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--c-red) 0%, var(--c-orange) 20%, var(--c-yellow) 35%, var(--c-green) 50%, var(--c-teal) 65%, var(--c-cyan) 80%, var(--c-blue) 100%); }
     html[dir="rtl"] input[type=range]::-webkit-slider-runnable-track { background: linear-gradient(90deg, var(--c-blue) 0%, var(--c-cyan) 20%, var(--c-teal) 35%, var(--c-green) 50%, var(--c-yellow) 65%, var(--c-orange) 80%, var(--c-red) 100%); }
     input[type=range]::-webkit-slider-thumb { height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 2px solid var(--muted); -webkit-appearance: none; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    input[type=range]::-moz-range-track { width: 100%; height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--c-orange) 0%, var(--c-blue) 100%); }
+    html[dir="rtl"] input[type=range]::-moz-range-track { background: linear-gradient(90deg, var(--c-blue) 0%, var(--c-orange) 100%); }
+    input[type=range]::-moz-range-thumb { height: 22px; width: 22px; border-radius: 50%; background: #fff; border: 2px solid rgba(255,255,255,0.18); box-shadow: 0 8px 18px rgba(0,0,0,0.35); }
+    input[type=range]::-moz-range-progress { height: 10px; border-radius: 5px; background: transparent; }
+
     .scale-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 0px; }
 
     .target-box { border: 1px solid var(--accent); background: rgba(14, 165, 233, 0.05); padding: 16px; border-radius: 12px; margin-top: 0; }
@@ -181,8 +277,23 @@
     .adv-hidden { display: none; }
     .adv-visible { display: flex; } 
     .adv-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .adv-col{display:flex; flex-direction:column; gap:10px;}
     .adv-full { grid-column: span 2; }
     
+    .smart-advice-box {
+        grid-column: span 2;
+        background: rgba(14, 165, 233, 0.1);
+        border: 1px solid var(--accent);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+    .advice-title { font-size: 14px; font-weight: 800; color: var(--text); opacity: 0.9; }
+    .advice-val { font-size: 18px; font-weight: 800; }
+
     .bf-wrapper {
         position: relative; width: 100%; height: 60px; margin-top: 24px; margin-bottom: 10px;
     }
@@ -232,257 +343,899 @@
     html[dir="rtl"] .bf-marker { transform: translateX(50%); }
 
     .cat-tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3); margin-top: 2px; }
+    
+    .pct-tag { 
+        font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-top: 4px;
+        color: #fff; text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    }
+    
     footer{text-align:center; padding:20px; font-size:12px; color:var(--muted);}
-  </style>
+  
+    .valrow{display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;}
+.valrow-col{flex-direction:column; gap:6px;}
+
+  /* Fix bidi/order for muscle "to next level" line */
+  #val-smm-range{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+  }
+  #val-smm-range .kg{ unicode-bidi:isolate; }
+
+</style>
 </head>
 <body>
+<div class="topbar">
+<div class="top-inner">
+<h1 class="title" id="title">مخطط السعرات الذكي</h1>
+<div class="lang">
+<button id="btn-en" type="button">E</button>
+<button class="active" id="btn-ar">ع</button>
+</div>
+</div>
+</div>
+<main class="wrap">
+<section class="card">
+<div class="gender-row">
+<label class="radio-label">
+<input checked="" id="rad-male" name="gender" type="radio" value="male"/>
+<span id="txt-male">ذكر</span>
+</label>
+<label class="radio-label">
+<input id="rad-female" name="gender" type="radio" value="female"/>
+<span id="txt-female">أنثى</span>
+</label>
+</div>
+<div class="input-grid">
+<div class="top-inputs">
+<div class="field"><label id="lab-age">العمر</label><input id="age" inputmode="decimal" type="text"/></div>
+<div class="field"><label id="lab-weight">الوزن (kg)</label><input id="weight" inputmode="decimal" type="text"/></div>
+<div class="field"><label id="lab-height">الطول (cm)</label><input id="height" inputmode="decimal" type="text"/></div>
+</div>
+<div class="switch-wrapper" id="mode-switch">
+<div class="mode-row">
+<span class="mode-label mode-healthy" id="lab-mode-healthy">صحي</span>
+<label class="toggle-switch" title="صحي / رياضي">
+<input id="is-sport" type="checkbox"/>
+<span class="slider"></span>
+</label>
+<span class="mode-label mode-sporty" id="lab-mode-sporty">رياضي</span>
+</div>
+<div class="mode-desc" id="mode-desc"></div>
+</div>
+<div class="adv-toggle-btn" id="btn-adv-toggle">
+<span id="lab-adv-text">نتائج متقدمة</span>
+<span class="adv-icon" id="adv-icon-sym">+</span>
+</div>
+<div class="adv-container adv-hidden" id="adv-inputs">
+<div class="field"><label id="lab-neck">الرقبة (cm)</label><input id="neck" inputmode="decimal" type="text"/></div>
+<div class="field"><label id="lab-waist">الخصر (cm)</label><input id="waist" inputmode="decimal" type="text"/></div>
+<div class="field" id="field-hip" style="display:none;"><label id="lab-hip">الأرداف (cm)</label><input id="hip" inputmode="decimal" type="text"/></div>
+</div>
+<div class="field field-full">
+<div class="btn-grid">
+<button class="btn" id="calc">احسب</button>
+<button class="btn btn-secondary" id="reset" type="button">إعادة تعيين</button>
+</div>
+</div>
+</div>
+</section>
+<section class="card result" id="result-card">
+<div class="rbox">
+<h3 class="rtitle" id="msg-maintenance">إجمالي الطاقة اليومية</h3>
+<div class="rvalue val-num" id="tdee-val" style="font-size:24px; font-weight:700">—</div>
+</div>
+<div class="goal-slider-container">
+<div class="goal-label" id="selected-goal">Maintain</div>
+<input id="goal-slider" max="6" min="0" step="1" type="range" value="3"/>
+<div class="scale-labels" id="slider-labels">
+<span>تنشيف</span> <span>محافظة</span> <span>تضخيم</span>
+</div>
+<div class="timeline-label" id="val-timeline">—</div>
+</div>
+<div class="target-box">
+<div class="rtitle" id="lab-target-cals">نطاق السعرات</div>
+<div class="target-val" id="val-target-cals">—</div>
+</div>
+<div class="macro-grid">
+<div class="mbox">
+<span class="mbox-label" id="lab-prot">بروتين</span>
+<span class="mbox-val val-num" id="val-prot">—</span>
+<span class="mbox-sub val-num" id="sub-prot">حد أدنى</span>
+</div>
+<div class="mbox">
+<span class="mbox-label" id="lab-fat">دهون</span>
+<span class="mbox-val val-num" id="val-fat">—</span>
+</div>
+<div class="mbox">
+<span class="mbox-label" id="lab-carb">كارب</span>
+<span class="mbox-val" id="val-carb">—</span>
+</div>
+</div>
+<div class="wbox">
+<div class="rtitle" id="lab-weight-change">تغير متوسط الوزن الاسبوعي المتوقع :</div>
+<div class="wbox-val" id="val-weight-change">—</div>
+</div>
+</section>
+<section class="card result" id="adv-result-card" style="display:none;">
+<div class="wbox adv-full" style="border-color:var(--c-green); background:rgba(34, 197, 94, 0.05);">
+<div class="rtitle" id="lab-ideal-w">الوزن المثالي</div>
+<div class="wbox-val val-num" id="val-ideal-w" style="color:var(--c-green);">—</div>
+</div>
+<div class="rbox adv-full">
+<h3 class="rtitle" id="lab-bf-title" style="font-size:16px; color:var(--accent);">نسبة الدهون</h3>
+<div class="range-flex" style="align-items:center; gap:10px;">
+<span class="val-num" id="val-bf-pct" style="font-size:28px; font-weight:800; color:var(--text);">—</span>
+<span class="cat-tag" id="val-bf-cat">—</span>
+</div>
+<div class="bf-wrapper" id="bf-wrapper">
+<div class="bf-marker" id="bf-marker"></div>
+<div class="bf-bar-base" id="bf-bar-base"></div>
+<div class="bf-labels-container" id="bf-labels-container"></div>
+<div class="bf-ticks-container" id="bf-ticks-container"></div>
+</div>
+</div>
+<div class="wbox adv-full">
+<span class="rtitle" id="lab-ideal-bf-age" style="margin-bottom:4px;">الدهون المثالية (نطاق صحي)</span>
+<span class="val-num" id="val-ideal-bf-age" style="font-size:18px; font-weight:800; color:var(--c-green);">—</span>
+</div>
+<div class="adv-result-grid adv-full">
+  <div class="mbox">
+    <span class="mbox-label" id="lab-fat-mass">كتلة الدهون</span>
+    <div class="valrow">
+      <span class="mbox-val val-num" id="val-fat-mass">—</span>
+      <span class="pct-tag" id="tag-fmi">—</span>
+    </div>
+    <span class="mbox-label" id="lab-action-fat" style="display:none;"></span>
+    <div class="mbox-val val-num" id="val-action-fat" style="font-size:13px; color:var(--c-green);">—</div>
+  </div>
 
-  <div class="topbar">
-    <div class="top-inner">
-      <h1 class="title" id="title">مخطط السعرات الذكي</h1>
-      <div class="lang">
-        <button id="btn-en">E</button>
-        <button id="btn-ar" class="active">ع</button>
-      </div>
+  <div class="mbox">
+    <span class="mbox-label" id="lab-lean-mass">صافي كتلة الجسم</span>
+    <div class="valrow">
+      <span class="mbox-val val-num" id="val-lean-mass">—</span>
+      <span class="pct-tag" id="tag-ffmi">—</span>
+    </div>
+    <span class="mbox-label" id="lab-action-muscle" style="display:none;"></span>
+    <div class="mbox-val val-num" id="val-action-muscle" style="font-size:13px;">—</div>
+  </div>
+
+  <div class="mbox">
+    <span class="mbox-label" id="lab-fat-risk">خطر الدهون</span>
+    <div class="valrow valrow-col">
+      <span class="pct-tag" id="tag-whtr">—</span>
     </div>
   </div>
 
-  <main class="wrap">
-    <section class="card">
-      <div class="gender-row">
-          <label class="radio-label">
-              <input type="radio" name="gender" value="male" checked id="rad-male">
-              <span id="txt-male">ذكر</span>
-          </label>
-          <label class="radio-label">
-              <input type="radio" name="gender" value="female" id="rad-female">
-              <span id="txt-female">أنثى</span>
-          </label>
-      </div>
+  <div class="mbox">
+    <span class="mbox-label" id="lab-smm">الكتلة العضلية</span>
+    <div class="valrow">
+      <span class="mbox-val val-num" id="val-smm">—</span>
+      <span class="pct-tag" id="tag-smm-level">—</span>
+    </div>
+    <div class="mbox-val val-num" id="val-smm-range" style="font-size:13px; color:var(--c-green);">—</div>
+  </div>
 
-      <div class="input-grid">
-        <div class="field"><label id="lab-age">العمر</label><input id="age" type="text" inputmode="decimal"></div>
-        <div class="field"><label id="lab-weight">الوزن (kg)</label><input id="weight" type="text" inputmode="decimal"></div>
-        <div class="field"><label id="lab-height">الطول (cm)</label><input id="height" type="text" inputmode="decimal"></div>
-        
-        <div class="switch-wrapper">
-             <label id="lab-sport">مع رياضة</label>
-             <label class="toggle-switch">
-                <input type="checkbox" id="is-sport">
-                <span class="slider"></span>
-            </label>
-        </div>
+  <div class="mbox">
+    <span class="mbox-label" id="lab-water">نسبة الماي</span>
+    <div class="valrow">
+      <span class="mbox-val val-num" id="val-water-pct">—</span>
+      <span class="pct-tag" id="tag-water-level">—</span>
+    </div>
+    <div class="mbox-val val-num" id="val-water-range" style="font-size:13px; color:var(--c-green);">—</div>
+  </div>
 
-        <div class="adv-toggle-btn" id="btn-adv-toggle">
-            <span id="lab-adv-text">نتائج متقدمة</span>
-            <span class="adv-icon" id="adv-icon-sym">+</span>
-        </div>
+  <div class="mbox">
+  <span class="mbox-label" id="lab-bodycomp">تصنيف تركيبة الجسم</span>
+  <div class="valrow valrow-col">
+    <span class="mbox-val val-num" id="val-bodycomp">—</span>
+    <div class="mbox-sub" id="val-bodycomp-pcts" style="display:none"></div>
+  </div>
+</div>
+</div>
 
-        <div id="adv-inputs" class="adv-container adv-hidden">
-             <div class="field"><label id="lab-neck">الرقبة (cm)</label><input id="neck" type="text" inputmode="decimal"></div>
-             <div class="field"><label id="lab-waist">الخصر (cm)</label><input id="waist" type="text" inputmode="decimal"></div>
-             <div class="field" id="field-hip" style="display:none;"><label id="lab-hip">الأرداف (cm)</label><input id="hip" type="text" inputmode="decimal"></div>
-        </div>
-
-        <div class="field field-full">
-            <button id="calc" class="btn">احسب</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card result" id="result-card">
-      <div class="rbox">
-        <h3 class="rtitle" id="msg-maintenance">إجمالي الطاقة اليومية</h3>
-        <div class="rvalue val-num" style="font-size:24px; font-weight:700" id="tdee-val">—</div>
-      </div>
-
-      <div class="goal-slider-container">
-        <div class="goal-label" id="selected-goal">Maintain</div>
-        <input type="range" id="goal-slider" min="0" max="6" step="1" value="3">
-        <div class="scale-labels" id="slider-labels">
-            <span>تنشيف</span> <span>محافظة</span> <span>تضخيم</span> 
-        </div>
-        <div class="timeline-label" id="val-timeline">—</div>
-      </div>
-
-      <div class="target-box">
-        <div class="rtitle" id="lab-target-cals">نطاق السعرات</div>
-        <div class="target-val" id="val-target-cals">—</div>
-      </div>
-
-      <div class="macro-grid">
-        <div class="mbox">
-            <span class="mbox-label" id="lab-prot">بروتين</span>
-            <span class="mbox-val val-num" id="val-prot">—</span>
-            <span class="mbox-sub val-num" id="sub-prot">حد أدنى</span>
-        </div>
-        <div class="mbox">
-            <span class="mbox-label" id="lab-fat">دهون</span>
-            <span class="mbox-val val-num" id="val-fat">—</span>
-        </div>
-        <div class="mbox">
-            <span class="mbox-label" id="lab-carb">كارب</span>
-            <span class="mbox-val" id="val-carb">—</span>
-        </div>
-      </div>
-
-      <div class="wbox">
-          <div class="rtitle" id="lab-weight-change">تغير متوسط الوزن الاسبوعي المتوقع :</div>
-          <div class="wbox-val" id="val-weight-change">—</div>
-      </div>
-    </section>
-
-    <section class="card result" id="adv-result-card" style="display:none;">
-        <div class="rbox adv-full">
-            <h3 class="rtitle" id="lab-bf-title" style="font-size:16px; color:var(--accent);">نسبة الدهون</h3>
-            <div class="range-flex" style="align-items:center; gap:10px;">
-                <span class="val-num" id="val-bf-pct" style="font-size:28px; font-weight:800; color:var(--text);">—</span>
-                <span class="cat-tag" id="val-bf-cat">—</span>
-            </div>
-            
-            <div class="bf-wrapper" id="bf-wrapper">
-                <div class="bf-marker" id="bf-marker"></div>
-                <div class="bf-bar-base" id="bf-bar-base"></div>
-                <div class="bf-labels-container" id="bf-labels-container"></div>
-                <div class="bf-ticks-container" id="bf-ticks-container"></div>
-            </div>
-        </div>
-
-        <div class="adv-result-grid adv-full">
-            <div class="mbox">
-                <span class="mbox-label" id="lab-fat-mass">كتلة الدهون</span>
-                <span class="mbox-val val-num" id="val-fat-mass">—</span>
-            </div>
-            <div class="mbox">
-                <span class="mbox-label" id="lab-lean-mass">الكتلة العضلية</span>
-                <span class="mbox-val val-num" id="val-lean-mass">—</span>
-            </div>
-        </div>
-
-        <div class="wbox adv-full" style="border-color:var(--c-green); background:rgba(34, 197, 94, 0.05);">
-            <div class="rtitle" id="lab-ideal-w">الوزن المثالي</div>
-            <div class="wbox-val val-num" id="val-ideal-w" style="color:var(--c-green);">—</div>
-        </div>
-
-        <div class="adv-result-grid adv-full">
-            <div class="mbox">
-                <span class="mbox-label" id="lab-ideal-bf-age">الدهون المثالية (نطاق صحي)</span>
-                <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span class="mbox-val val-num" id="val-ideal-bf-age" style="color:var(--c-green);">—</span>
-                </div>
-            </div>
-            <div class="mbox">
-                <span class="mbox-label" id="lab-bf-lose">دهون يجب خسارتها</span>
-                <span class="mbox-val val-num" id="val-bf-lose" style="color:var(--c-orange);">—</span>
-            </div>
-        </div>
-    </section>
-
-  </main>
-  
-  <footer>
-    <div id="copyright">© 2025 — Smart Planner</div>
-  </footer>
-
+<div class="smart-advice-box adv-full" id="smart-advice-box">
+<div class="advice-title" id="advice-title">الخطة المقترحة</div>
+<div class="advice-val" id="advice-val">—</div>
+</div>
+</section>
+</main>
+<footer>
+<div id="copyright">© 2025 — Smart Planner</div>
+</footer>
 <script>
 (function(){
-  const $ = (id)=>document.getElementById(id);
+const __cache = Object.create(null);
+  const $ = (id)=> (__cache[id] ??= document.getElementById(id));
   let currentLang = 'ar';
   let tdeeGlobal = 0;
+  let hasCalculated = false;
   let weightGlobal = 0;
   let isAdvExpanded = false;
 
-  const goalsData = [
-    { 
-        id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', 
-        c_min:-0.50, c_max:-0.30, 
-        p_min:1.8, p_max:1.8, f_min:0.5, f_max:0.5, 
-        w_pct:[-0.01, -0.0125], 
-        timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' 
-    },
-    { 
-        id: 'cut', en:'Cutting', ar:'تنشيف',     
-        c_min:-0.30, c_max:-0.10, 
-        p_min:1.6, p_max:1.6, f_min:0.6, f_max:1.0, 
-        w_pct:[-0.005, -0.01], 
-        timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' 
-    },
-    { 
-        id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', 
-        c_min:-0.10, c_max:-0.05, 
-        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
-        w_pct:[-0.001, -0.005], 
-        timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' 
-    },
-    { 
-        id: 'maint', en:'Maintain', ar:'محافظة',    
-        c_min:-0.05, c_max:0.05,  
-        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
-        w_pct:[0.0015, -0.001], 
-        timeEn:'Lifelong', timeAr:'نمط حياة' 
-    },
-    { 
-        id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي',
-        c_min:0.05,  c_max:0.10,  
-        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, 
-        w_pct:[0.0015, 0.0025], 
-        timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' 
-    },
-    { 
-        id: 'bulk', en:'Bulking', ar:'تضخيم',     
-        c_min:0.10,  c_max:0.20,  
-        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.25, 
-        w_pct:[0.0025, 0.005], 
-        timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' 
-    },
-    { 
-        id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', 
-        c_min:0.20,  c_max:0.50,  
-        p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.5, 
-        w_pct:[0.005, 0.015], 
-        timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' 
+  const ffmiTable = {
+      male: {
+          '18-34': { p5: 16.8, p10: 17.2, p25: 18.0, p50: 18.9, p75: 19.8, p90: 20.5, p95: 21.1 },
+          '35-54': { p5: 17.2, p10: 17.6, p25: 18.3, p50: 19.2, p75: 20.1, p90: 21.1, p95: 21.7 },
+          '55-74': { p5: 17.0, p10: 17.6, p25: 18.4, p50: 19.4, p75: 20.3, p90: 21.1, p95: 22.1 },
+          '75+': { p5: 16.6, p10: 16.9, p25: 17.6, p50: 18.5, p75: 19.4, p90: 20.9, p95: 21.2 }
+      },
+      female: {
+          '18-34': { p5: 13.8, p10: 14.1, p25: 14.7, p50: 15.4, p75: 16.2, p90: 17.1, p95: 17.6 },
+          '35-54': { p5: 14.4, p10: 14.7, p25: 15.3, p50: 15.9, p75: 16.7, p90: 17.5, p95: 18.0 },
+          '55-74': { p5: 14.1, p10: 14.6, p25: 15.4, p50: 16.2, p75: 17.4, p90: 18.4, p95: 19.0 },
+          '75+': { p5: 12.9, p10: 13.7, p25: 14.7, p50: 15.9, p75: 17.0, p90: 18.1, p95: 18.7 }
+      }
+  };
+
+  const fmiTable = {
+      male: {
+          '18-34': { p5: 2.2, p10: 2.5, p25: 3.2, p50: 4.0, p75: 5.0, p90: 6.1, p95: 7.0 },
+          '35-54': { p5: 2.5, p10: 2.9, p25: 3.7, p50: 4.8, p75: 6.0, p90: 7.2, p95: 7.9 },
+          '55-74': { p5: 2.8, p10: 3.4, p25: 4.3, p50: 5.7, p75: 7.2, p90: 8.4, p95: 9.3 },
+          '75+': { p5: 3.7, p10: 4.3, p25: 5.2, p50: 6.4, p75: 7.6, p90: 9.0, p95: 10.1 }
+      },
+      female: {
+          '18-34': { p5: 3.5, p10: 3.9, p25: 4.6, p50: 5.5, p75: 6.6, p90: 7.8, p95: 8.7 },
+          '35-54': { p5: 3.4, p10: 3.9, p25: 4.8, p50: 5.9, p75: 7.3, p90: 8.8, p95: 9.9 },
+          '55-74': { p5: 4.5, p10: 5.4, p25: 6.5, p50: 8.3, p75: 10.3, p90: 12.0, p95: 13.5 },
+          '75+': { p5: 4.9, p10: 5.6, p25: 7.5, p50: 9.3, p75: 11.4, p90: 13.5, p95: 14.3 }
+      }
+  };
+
+  function getAgeGroup(age) {
+      if (age <= 34) return '18-34';
+      if (age <= 54) return '35-54';
+      if (age <= 74) return '55-74';
+      return '75+';
+  }
+
+  function getPercentile(val, table) {
+      if (val < table.p5) return 2.5;
+      if (val < table.p10) return 7.5;
+      if (val < table.p25) return 17.5;
+      if (val < table.p50) return 37.5;
+      if (val < table.p75) return 62.5;
+      if (val < table.p90) return 82.5;
+      if (val < table.p95) return 92.5;
+      return 97.5;
+  }
+
+
+  // --- Athlete-specific FFMI percentile (closer to sports populations) ---
+  // Male: approximate normal distribution from collegiate athletes (mean±SD).
+  // Female: piecewise-linear interpolation from published percentiles.
+  function __erf(x){
+    // Abramowitz & Stegun 7.1.26 approximation
+    const sign = (x >= 0) ? 1 : -1;
+    x = Math.abs(x);
+    const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+    const p = 0.3275911;
+    const t = 1 / (1 + p * x);
+    const y = 1 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-x * x);
+    return sign * y;
+  }
+  function __normCDF(z){
+    return 0.5 * (1 + __erf(z / Math.SQRT2));
+  }
+  function __clampPct(p){
+    if(!isFinite(p)) return NaN;
+    return Math.max(0.1, Math.min(99.9, p));
+  }
+  function getAthleteFFMIPercentile(ffmi, gender){
+    const v = Number(ffmi);
+    if(!isFinite(v)) return NaN;
+
+    if(gender === 'male'){
+      // Collegiate male athletes: mean ≈ 22.79, SD ≈ 2.80
+      const mean = 22.79, sd = 2.80;
+      const z = (v - mean) / sd;
+      return __clampPct(__normCDF(z) * 100);
     }
+
+    // Collegiate female athletes: published percentiles (All sports)
+    const pts = [
+      {p:5,   x:15.96},
+      {p:10,  x:16.38},
+      {p:15,  x:16.92},
+      {p:20,  x:17.20},
+      {p:30,  x:17.63},
+      {p:40,  x:18.10},
+      {p:50,  x:18.52},
+      {p:60,  x:18.93},
+      {p:70,  x:19.55},
+      {p:80,  x:20.26},
+      {p:90,  x:21.52},
+      {p:97.5,x:23.90}
+    ];
+    // Below first point
+    if(v <= pts[0].x){
+      const p = pts[0].p + (v - pts[0].x) * (pts[1].p - pts[0].p) / (pts[1].x - pts[0].x);
+      return __clampPct(p);
+    }
+    // Above last point
+    const last = pts[pts.length - 1];
+    if(v >= last.x){
+      const prev = pts[pts.length - 2];
+      const p = last.p + (v - last.x) * (last.p - prev.p) / (last.x - prev.x);
+      return __clampPct(p);
+    }
+    // Between points
+    for(let i=0;i<pts.length-1;i++){
+      const a = pts[i], b = pts[i+1];
+      if(v >= a.x && v <= b.x){
+        const t = (v - a.x) / (b.x - a.x);
+        return __clampPct(a.p + t * (b.p - a.p));
+      }
+    }
+    return NaN;
+  }
+  function getAthleteFFMIP25(gender){
+    if(gender === 'male') return 21.1; // 25th percentile (All sports) for collegiate male athletes
+    // female: interpolate between 20th=17.20 and 30th=17.63 => 25th≈17.415
+    return 17.415;
+  }
+
+
+      
+function gradeFFMI(ffmi, gender, sporty){
+  const v = Number(ffmi);
+  const isFemale = (gender === 'female');
+  const isSportyMode = !!sporty;
+
+  // thresholds (min-inclusive, next threshold is start of next band)
+  const tHealthyMale   = [16.168, 17.891, 20.378, 21.428, 22.013]; // نقص, منخفض, متوسط, مرتفع, عالي, عالي جداً
+  const tHealthyFemale = [14.123, 15.110, 16.868, 17.663, 18.162]; // نقص, منخفضة, متوسطة, مرتفعة, عالية, عالية جداً
+
+  const tSportMale   = [19.51, 20.4, 23.9, 24.7, 25.7, 28.32, 30.0];   // منخفض جداً (<19.51), منخفض, متوسط, مثالي, متفوق, استثنائي, نادر, نادر جداً
+  const tSportFemale = [16.31, 16.9, 19.2, 19.7, 23.9, 25.78, 27.2];   // منخفضة جداً, منخفضة, متوسطة, مثالية, متفوقة, استثنائية, نادرة, نادرة جداً
+
+  const arHealthyMale   = ["نقص","منخفض","متوسط","مرتفع","عالي","عالي جداً"];
+  const arHealthyFemale = ["نقص","منخفضة","متوسطة","مرتفعة","عالية","عالية جداً"];
+
+  const arSportMale   = ["منخفض جداً","منخفض","متوسط","مثالي","متفوق","استثنائي","نادر","نادر جداً"];
+  const arSportFemale = ["منخفضة جداً","منخفضة","متوسطة","مثالية","متفوقة","استثنائية","نادرة","نادرة جداً"];
+
+  const enHealthy = ["Deficient","Low","Medium","High","Very High","Extremely High"];
+  const enSport   = ["Very Low","Low","Medium","Ideal","Superior","Exceptional","Rare","Very Rare"];
+
+  const pal6 = [
+    {bg:'var(--c-red)',    fg:'#fff'},
+    {bg:'var(--c-orange)', fg:'#fff'},
+    {bg:'var(--c-yellow)', fg:'#111827'},
+    {bg:'var(--c-green)',  fg:'#fff'},
+    {bg:'var(--c-blue)',   fg:'#fff'},
+    {bg:'var(--c-purple)', fg:'#fff'}
+  ];
+  const pal8 = [
+    {bg:'var(--c-red)',    fg:'#fff'},
+    {bg:'var(--c-orange)', fg:'#fff'},
+    {bg:'var(--c-yellow)', fg:'#111827'},
+    {bg:'var(--c-green)',  fg:'#fff'},
+    {bg:'var(--c-blue)',   fg:'#fff'},
+    {bg:'var(--c-purple)', fg:'#fff'},
+    {bg:'#6d28d9',         fg:'#fff'}, // deeper purple
+    {bg:'#4c1d95',         fg:'#fff'}  // deepest
+  ];
+
+  let idx = 0;
+
+  if(isSportyMode){
+    const t = isFemale ? tSportFemale : tSportMale;
+    // idx mapping: 0..7
+    if(isFinite(v)){
+      if(v < t[0]) idx = 0;
+      else if(v < t[1]) idx = 1;
+      else if(v < t[2]) idx = 2;
+      else if(v < t[3]) idx = 3;
+      else if(v < t[4]) idx = 4;
+      else if(v < t[5]) idx = 5;
+      else if(v < t[6]) idx = 6;
+      else idx = 7;
+    }
+    const c = pal8[idx];
+    const ar = isFemale ? arSportFemale[idx] : arSportMale[idx];
+    const en = enSport[idx];
+    return { ar, en, bg:c.bg, fg:c.fg, bd:'rgba(255,255,255,.22)', shadow:'0 0 0 2px rgba(255,255,255,.08)', idx };
+  }
+
+  const t = isFemale ? tHealthyFemale : tHealthyMale;
+  if(isFinite(v)){
+    if(v < t[0]) idx = 0;
+    else if(v < t[1]) idx = 1;
+    else if(v < t[2]) idx = 2;
+    else if(v < t[3]) idx = 3;
+    else if(v < t[4]) idx = 4;
+    else idx = 5;
+  }
+  const c = pal6[idx];
+  const ar = isFemale ? arHealthyFemale[idx] : arHealthyMale[idx];
+  const en = enHealthy[idx];
+  return { ar, en, bg:c.bg, fg:c.fg, bd:'rgba(255,255,255,.22)', shadow:'0 0 0 2px rgba(255,255,255,.08)', idx };
+}
+
+function getNextFFMITarget(ffmi, gender, sporty){
+  const v = Number(ffmi);
+  const isFemale = (gender === 'female');
+  const isSportyMode = !!sporty;
+
+  const tHealthyMale   = [16.168, 17.891, 20.378, 21.428, 22.013];
+  const tHealthyFemale = [14.123, 15.110, 16.868, 17.663, 18.162];
+
+  const tSportMale   = [19.51, 20.4, 23.9, 24.7, 25.7, 28.32, 30.0];
+  const tSportFemale = [16.31, 16.9, 19.2, 19.7, 23.9, 25.78, 27.2];
+
+  const arHealthyMale   = ["نقص","منخفض","متوسط","مرتفع","عالي","عالي جداً"];
+  const arHealthyFemale = ["نقص","منخفضة","متوسطة","مرتفعة","عالية","عالية جداً"];
+
+  const arSportMale   = ["منخفض جداً","منخفض","متوسط","مثالي","متفوق","استثنائي","نادر","نادر جداً"];
+  const arSportFemale = ["منخفضة جداً","منخفضة","متوسطة","مثالية","متفوقة","استثنائية","نادرة","نادرة جداً"];
+
+  const enHealthy = ["Deficient","Low","Medium","High","Very High","Extremely High"];
+  const enSport   = ["Very Low","Low","Medium","Ideal","Superior","Exceptional","Rare","Very Rare"];
+
+  if(!isFinite(v)) return null;
+
+  const t = isSportyMode ? (isFemale ? tSportFemale : tSportMale) : (isFemale ? tHealthyFemale : tHealthyMale);
+  const arList = isSportyMode ? (isFemale ? arSportFemale : arSportMale) : (isFemale ? arHealthyFemale : arHealthyMale);
+  const enList = isSportyMode ? enSport : enHealthy;
+
+  // thresholds define the start of each band except the first (low) band.
+  // find current band index
+  let idx = 0;
+  if(v < t[0]) idx = 0;
+  else {
+    idx = 1;
+    for(let i=1;i<t.length;i++){
+      if(v < t[i]){ idx = i; break; }
+      idx = i+1;
+    }
+  }
+
+  const nextIdx = idx + 1;
+  const hasNext = nextIdx < (arList.length);
+  if(!hasNext) return { hasNext:false };
+
+  const nextStart = t[idx]; // start threshold for next band
+  const nextAr = arList[nextIdx];
+  const nextEn = enList[nextIdx];
+  return { hasNext:true, nextStart, nextAr, nextEn, nextColor:'var(--c-green)' };
+}
+
+// --- SMMI (Al-Gindan) level grading (kg/m²) ---
+function getSMMIAgeBand(gender, sporty, age){
+  const a = Number(age) || 0;
+  if(sporty){
+    if(a >= 80) return "80+";
+    if(a >= 70) return "70-79";
+    if(a >= 60) return "60-69";
+    if(a >= 50) return "50-59";
+    if(a >= 40) return "40-49";
+    if(a >= 30) return "30-39";
+    return "18-29";
+  }
+  if(gender === 'male'){
+    if(a >= 60) return "60+";
+    if(a >= 50) return "50-59";
+    if(a >= 40) return "40-49";
+    if(a >= 30) return "30-39";
+    return "20-29";
+  }
+  // female healthy
+  if(a >= 60) return "60+";
+  if(a >= 50) return "50-59";
+  if(a >= 40) return "40-49";
+  if(a >= 30) return "30-39";
+  return "20-29";
+}
+
+const SMMI_TABLES = {
+  healthy: {
+    male: {
+      "20-29": [
+        {min:12.76, ar:"عالي جداً", en:"Extremely High"},
+        {min:12.08, ar:"عالي", en:"Very High"},
+        {min:11.47, ar:"مرتفع", en:"High"},
+        {min:10.80, ar:"طبيعي", en:"Normal"},
+        {min:10.13, ar:"متوسط", en:"Medium"},
+        {min:9.52,  ar:"منخفض", en:"Low"},
+        {min:8.84,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "30-39": [
+        {min:13.06, ar:"عالي جداً", en:"Extremely High"},
+        {min:12.38, ar:"عالي", en:"Very High"},
+        {min:11.77, ar:"مرتفع", en:"High"},
+        {min:11.10, ar:"طبيعي", en:"Normal"},
+        {min:10.43, ar:"متوسط", en:"Medium"},
+        {min:9.82,  ar:"منخفض", en:"Low"},
+        {min:9.14,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "40-49": [
+        {min:13.06, ar:"عالي جداً", en:"Extremely High"},
+        {min:12.38, ar:"عالي", en:"Very High"},
+        {min:11.77, ar:"مرتفع", en:"High"},
+        {min:11.10, ar:"طبيعي", en:"Normal"},
+        {min:10.43, ar:"متوسط", en:"Medium"},
+        {min:9.82,  ar:"منخفض", en:"Low"},
+        {min:9.14,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "50-59": [
+        {min:12.56, ar:"عالي جداً", en:"Extremely High"},
+        {min:11.95, ar:"عالي", en:"Very High"},
+        {min:11.41, ar:"مرتفع", en:"High"},
+        {min:10.80, ar:"طبيعي", en:"Normal"},
+        {min:10.19, ar:"متوسط", en:"Medium"},
+        {min:9.65,  ar:"منخفض", en:"Low"},
+        {min:9.04,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "60+": [
+        {min:12.26, ar:"عالي جداً", en:"Extremely High"},
+        {min:11.58, ar:"عالي", en:"Very High"},
+        {min:10.97, ar:"مرتفع", en:"High"},
+        {min:10.30, ar:"طبيعي", en:"Normal"},
+        {min:9.63,  ar:"متوسط", en:"Medium"},
+        {min:9.02,  ar:"منخفض", en:"Low"},
+        {min:8.34,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ]
+    },
+    female: {
+      "20-29":[
+        {min:10.80, ar:"عالي جداً", en:"Extremely High"},
+        {min:10.00, ar:"عالي", en:"Very High"},
+        {min:9.20,  ar:"مرتفع", en:"High"},
+        {min:8.40,  ar:"طبيعي", en:"Normal"},
+        {min:7.60,  ar:"متوسط", en:"Medium"},
+        {min:6.80,  ar:"منخفض", en:"Low"},
+        {min:6.00,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "30-39":[
+        {min:11.50, ar:"عالي جداً", en:"Extremely High"},
+        {min:10.60, ar:"عالي", en:"Very High"},
+        {min:9.70,  ar:"مرتفع", en:"High"},
+        {min:8.80,  ar:"طبيعي", en:"Normal"},
+        {min:7.90,  ar:"متوسط", en:"Medium"},
+        {min:7.00,  ar:"منخفض", en:"Low"},
+        {min:6.10,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "40-49":[
+        {min:11.50, ar:"عالي جداً", en:"Extremely High"},
+        {min:10.70, ar:"عالي", en:"Very High"},
+        {min:9.90,  ar:"مرتفع", en:"High"},
+        {min:9.10,  ar:"طبيعي", en:"Normal"},
+        {min:8.30,  ar:"متوسط", en:"Medium"},
+        {min:7.50,  ar:"منخفض", en:"Low"},
+        {min:6.70,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "50-59":[
+        {min:11.10, ar:"عالي جداً", en:"Extremely High"},
+        {min:10.40, ar:"عالي", en:"Very High"},
+        {min:9.70,  ar:"مرتفع", en:"High"},
+        {min:9.00,  ar:"طبيعي", en:"Normal"},
+        {min:8.30,  ar:"متوسط", en:"Medium"},
+        {min:7.60,  ar:"منخفض", en:"Low"},
+        {min:6.90,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ],
+      "60+":[
+        {min:10.70, ar:"عالي جداً", en:"Extremely High"},
+        {min:10.00, ar:"عالي", en:"Very High"},
+        {min:9.30,  ar:"مرتفع", en:"High"},
+        {min:8.60,  ar:"طبيعي", en:"Normal"},
+        {min:7.90,  ar:"متوسط", en:"Medium"},
+        {min:7.20,  ar:"منخفض", en:"Low"},
+        {min:6.50,  ar:"منخفض جداً", en:"Very Low"},
+        {min:-1e9,  ar:"نقص حاد", en:"Severe Deficit"}
+      ]
+    }
+  },
+  sporty: {
+    male: {
+      "18-29":[
+        {min:16.26, ar:"النخبة", en:"Elite"},
+        {min:14.61, ar:"استثنائي", en:"Exceptional"},
+        {min:12.97, ar:"متفوق", en:"Superior"},
+        {min:11.81, ar:"ممتاز", en:"Excellent"},
+        {min:11.00, ar:"متقدم", en:"Advanced"},
+        {min:10.19, ar:"رياضي", en:"Athletic"},
+        {min:9.03,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "30-39":[
+        {min:16.47, ar:"النخبة", en:"Elite"},
+        {min:15.04, ar:"استثنائي", en:"Exceptional"},
+        {min:13.61, ar:"متفوق", en:"Superior"},
+        {min:12.54, ar:"ممتاز", en:"Excellent"},
+        {min:11.80, ar:"متقدم", en:"Advanced"},
+        {min:11.06, ar:"رياضي", en:"Athletic"},
+        {min:9.99,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "40-49":[
+        {min:16.55, ar:"النخبة", en:"Elite"},
+        {min:15.21, ar:"استثنائي", en:"Exceptional"},
+        {min:13.87, ar:"متفوق", en:"Superior"},
+        {min:12.71, ar:"ممتاز", en:"Excellent"},
+        {min:11.90, ar:"متقدم", en:"Advanced"},
+        {min:11.09, ar:"رياضي", en:"Athletic"},
+        {min:9.93,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "50-59":[
+        {min:16.37, ar:"النخبة", en:"Elite"},
+        {min:14.84, ar:"استثنائي", en:"Exceptional"},
+        {min:13.31, ar:"متفوق", en:"Superior"},
+        {min:12.24, ar:"ممتاز", en:"Excellent"},
+        {min:11.50, ar:"متقدم", en:"Advanced"},
+        {min:10.76, ar:"رياضي", en:"Athletic"},
+        {min:9.69,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "60-69":[
+        {min:16.27, ar:"النخبة", en:"Elite"},
+        {min:14.64, ar:"استثنائي", en:"Exceptional"},
+        {min:13.01, ar:"متفوق", en:"Superior"},
+        {min:11.94, ar:"ممتاز", en:"Excellent"},
+        {min:11.20, ar:"متقدم", en:"Advanced"},
+        {min:10.46, ar:"رياضي", en:"Athletic"},
+        {min:9.39,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "70-79":[
+        {min:16.01, ar:"النخبة", en:"Elite"},
+        {min:14.13, ar:"استثنائي", en:"Exceptional"},
+        {min:12.24, ar:"متفوق", en:"Superior"},
+        {min:11.27, ar:"ممتاز", en:"Excellent"},
+        {min:10.60, ar:"متقدم", en:"Advanced"},
+        {min:9.93,  ar:"رياضي", en:"Athletic"},
+        {min:8.96,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "80+":[
+        {min:15.81, ar:"النخبة", en:"Elite"},
+        {min:13.73, ar:"استثنائي", en:"Exceptional"},
+        {min:11.64, ar:"متفوق", en:"Superior"},
+        {min:10.67, ar:"ممتاز", en:"Excellent"},
+        {min:10.00, ar:"متقدم", en:"Advanced"},
+        {min:9.33,  ar:"رياضي", en:"Athletic"},
+        {min:8.36,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ]
+    },
+    female: {
+      "18-29":[
+        {min:12.36, ar:"النخبة", en:"Elite"},
+        {min:11.52, ar:"استثنائية", en:"Exceptional"},
+        {min:10.68, ar:"متفوقة", en:"Superior"},
+        {min:9.81,  ar:"ممتازة", en:"Excellent"},
+        {min:9.20,  ar:"متقدمة", en:"Advanced"},
+        {min:8.59,  ar:"رياضية", en:"Athletic"},
+        {min:7.72,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "30-39":[
+        {min:12.43, ar:"النخبة", en:"Elite"},
+        {min:11.65, ar:"استثنائية", en:"Exceptional"},
+        {min:10.88, ar:"متفوقة", en:"Superior"},
+        {min:10.01, ar:"ممتازة", en:"Excellent"},
+        {min:9.40,  ar:"متقدمة", en:"Advanced"},
+        {min:8.79,  ar:"رياضية", en:"Athletic"},
+        {min:7.92,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "40-49":[
+        {min:12.46, ar:"النخبة", en:"Elite"},
+        {min:11.72, ar:"استثنائية", en:"Exceptional"},
+        {min:10.98, ar:"متفوقة", en:"Superior"},
+        {min:10.11, ar:"ممتازة", en:"Excellent"},
+        {min:9.50,  ar:"متقدمة", en:"Advanced"},
+        {min:8.89,  ar:"رياضية", en:"Athletic"},
+        {min:8.02,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "50-59":[
+        {min:12.46, ar:"النخبة", en:"Elite"},
+        {min:11.72, ar:"استثنائية", en:"Exceptional"},
+        {min:10.98, ar:"متفوقة", en:"Superior"},
+        {min:10.11, ar:"ممتازة", en:"Excellent"},
+        {min:9.50,  ar:"متقدمة", en:"Advanced"},
+        {min:8.89,  ar:"رياضية", en:"Athletic"},
+        {min:8.02,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "60-69":[
+        {min:12.37, ar:"النخبة", en:"Elite"},
+        {min:11.55, ar:"استثنائية", en:"Exceptional"},
+        {min:10.72, ar:"متفوقة", en:"Superior"},
+        {min:9.94,  ar:"ممتازة", en:"Excellent"},
+        {min:9.40,  ar:"متقدمة", en:"Advanced"},
+        {min:8.86,  ar:"رياضية", en:"Athletic"},
+        {min:8.08,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "70-79":[
+        {min:12.62, ar:"النخبة", en:"Elite"},
+        {min:12.05, ar:"استثنائية", en:"Exceptional"},
+        {min:11.47, ar:"متفوقة", en:"Superior"},
+        {min:10.31, ar:"ممتازة", en:"Excellent"},
+        {min:9.50,  ar:"متقدمة", en:"Advanced"},
+        {min:8.69,  ar:"رياضية", en:"Athletic"},
+        {min:7.53,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ],
+      "80+":[
+        {min:12.46, ar:"النخبة", en:"Elite"},
+        {min:11.72, ar:"استثنائية", en:"Exceptional"},
+        {min:10.98, ar:"متفوقة", en:"Superior"},
+        {min:10.11, ar:"ممتازة", en:"Excellent"},
+        {min:9.50,  ar:"متقدمة", en:"Advanced"},
+        {min:8.89,  ar:"رياضية", en:"Athletic"},
+        {min:8.02,  ar:"مقبول", en:"Acceptable"},
+        {min:-1e9,  ar:"قليل", en:"Low"}
+      ]
+    }
+  }
+};
+
+function gradeSMMI(smmi, gender, sporty, age){
+  const v = Number(smmi);
+  if(!isFinite(v)) return null;
+
+  const table = sporty ? SMMI_TABLES.sporty : SMMI_TABLES.healthy;
+  const band = getSMMIAgeBand(gender, sporty, age);
+  const cuts = (table[gender] && table[gender][band]) ? table[gender][band] : null;
+  if(!cuts || !cuts.length) return null;
+
+  // cuts are descending by min
+  let idx = 0;
+  for(let i=0;i<cuts.length;i++){
+    if(v >= cuts[i].min){ idx = i; break; }
+  }
+
+  // color palette (descending good->better)
+  const pal = [
+    {bg:'var(--c-purple)', fg:'#fff'},
+    {bg:'var(--c-blue)',   fg:'#fff'},
+    {bg:'var(--c-green)',  fg:'#fff'},
+    {bg:'var(--c-yellow)', fg:'#111827'},
+    {bg:'var(--c-orange)', fg:'#fff'},
+    {bg:'var(--c-red)',    fg:'#fff'}
+  ];
+  const c = pal[Math.min(pal.length-1, Math.floor((idx / Math.max(1,cuts.length-1)) * (pal.length-1)))];
+
+  const ar = cuts[idx].ar;
+  const en = cuts[idx].en;
+
+  const hasNext = (idx > 0); // next higher category is previous item (idx-1)
+  const nextMin = hasNext ? cuts[idx-1].min : null;
+  const nextAr = hasNext ? cuts[idx-1].ar : null;
+  const nextEn = hasNext ? cuts[idx-1].en : null;
+
+  // expose idx so we can bucket SMMI into Low/Normal/High for body-composition logic
+  return { ar, en, idx, band, sporty, bg:c.bg, fg:c.fg, bd:'rgba(255,255,255,.22)', shadow:'0 0 0 2px rgba(255,255,255,.08)', hasNext, nextMin, nextAr, nextEn };
+}
+
+
+function gradeFMIChart(fmi, gender){
+  const v = Number(fmi);
+  const isFemale = (gender === 'female');
+
+  const cuts = isFemale ? [4, 8, 12, 16, 20] : [3, 6, 9.5, 12.5, 16];
+
+  const ar = ["نحافة","طبيعي","بداية سمنة","سمنة درجة ١","سمنة درجة ٢","سمنة درجة ٣"];
+  const en = ["Underweight","Normal","Pre-obese","Obesity I","Obesity II","Obesity III"];
+
+  const colors = [
+    {bg:'var(--c-blue)',   fg:'#fff', bd:'rgba(255,255,255,0.22)', shadow:'0 6px 18px rgba(0,0,0,0.25)'},
+    {bg:'var(--c-green)',  fg:'#fff', bd:'rgba(255,255,255,0.22)', shadow:'0 6px 18px rgba(0,0,0,0.20)'},
+    {bg:'var(--c-yellow)', fg:'#111827', bd:'rgba(0,0,0,0.18)',   shadow:'0 6px 18px rgba(0,0,0,0.12)'},
+    {bg:'var(--c-orange)', fg:'#fff', bd:'rgba(255,255,255,0.18)', shadow:'0 6px 18px rgba(0,0,0,0.20)'},
+    {bg:'var(--c-red)',    fg:'#fff', bd:'rgba(255,255,255,0.18)', shadow:'0 6px 18px rgba(0,0,0,0.22)'},
+    {bg:'#7f1d1d',         fg:'#fff', bd:'rgba(255,255,255,0.16)', shadow:'0 6px 18px rgba(0,0,0,0.28)'}
+  ];
+
+  let idx = 5;
+  if(v < cuts[0]) idx = 0;
+  else if(v < cuts[1]) idx = 1;
+  else if(v < cuts[2]) idx = 2;
+  else if(v < cuts[3]) idx = 3;
+  else if(v < cuts[4]) idx = 4;
+
+  const normalLow  = isFemale ? 4 : 3;
+  const normalHigh = isFemale ? 8 : 6;
+
+  return { idx, ar: ar[idx], en: en[idx], bg: colors[idx].bg, fg: colors[idx].fg, bd: colors[idx].bd, shadow: colors[idx].shadow, normalLow, normalHigh };
+}
+
+function getClassification(p) {
+      if (p < 25) return 'Low';
+      if (p <= 75) return 'Normal';
+      return 'High';
+  }
+
+  const goalsData = [
+    { id: 'mini_cut', en:'Aggressive Cut', ar:'تنشيف قاسي', c_min:-0.50, c_max:-0.30, p_min:1.8, p_max:1.8, f_min:0.5, f_max:0.5, w_pct:[-0.01, -0.0125], timeEn:'2 → 8 weeks', timeAr:'٢ ← ٨ أسابيع' },
+    { id: 'cut', en:'Cutting', ar:'تنشيف', c_min:-0.30, c_max:-0.10, p_min:1.6, p_max:1.6, f_min:0.6, f_max:1.0, w_pct:[-0.005, -0.01], timeEn:'2 → 4 months', timeAr:'٢ ← ٤ أشهر' },
+    { id: 'recomp', en:'Recomp.', ar:'إعادة تشكيل', c_min:-0.10, c_max:-0.05, p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, w_pct:[-0.001, -0.005], timeEn:'3 → 6 months', timeAr:'٣ ← ٦ أشهر' },
+    { id: 'maint', en:'Maintain', ar:'محافظة', c_min:-0.05, c_max:0.05, p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, w_pct:[0.0015, -0.001], timeEn:'Lifelong', timeAr:'نمط حياة' },
+    { id: 'lean', en:'Lean Bulk', ar:'تضخيم صافي', c_min:0.05, c_max:0.10, p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.0, w_pct:[0.0015, 0.0025], timeEn:'6 → 12 months', timeAr:'٦ ← ١٢ شهر' },
+    { id: 'bulk', en:'Bulking', ar:'تضخيم', c_min:0.10, c_max:0.20, p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.25, w_pct:[0.0025, 0.005], timeEn:'4 → 9 months', timeAr:'٤ ← ٩ أشهر' },
+    { id: 'agg_bulk', en:'Aggressive Bulk', ar:'تضخيم قوي', c_min:0.20, c_max:0.50, p_min:1.6, p_max:2.2, f_min:0.6, f_max:1.5, w_pct:[0.005, 0.015], timeEn:'3 → 4 months', timeAr:'٣ ← ٤ أشهر' }
   ];
 
   const goalColors = ['var(--c-red)', 'var(--c-orange)', 'var(--c-yellow)', 'var(--c-green)', 'var(--c-teal)', 'var(--c-cyan)', 'var(--c-blue)'];
 
   const i18n = {
     ar: {
-      dir:"rtl", title:"مخطط السعرات الذكي", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب",
-      txtMale:"ذكر", txtFemale:"أنثى", sport:"مع رياضة",
+      dir:"rtl", title:"مخطط السعرات الذكي", age:"العمر", weight:"الوزن (kg)", height:"الطول (cm)", calc:"احسب", reset:"إعادة تعيين",
+      txtMale:"ذكر", txtFemale:"أنثى", sport:"مع رياضة", healthyMode:"صحي", sportyMode:"رياضي", modeHealthyDesc:"مناسب للحياة اليومية والنشاط العادي حيث يركز على استقرار الوزن والوقاية الصحية المستدامة لضمان جودة حياة عالية", modeSportyDesc:"مخصص للرياضيين وأصحاب الجهد العالي حيث يعتمد على معايير دقيقة لدعم الكتلة العضلية وضمان طاقة قصوى للأداء والاستشفاء",
       maintT:"إجمالي الطاقة اليومية", target:"نطاق السعرات", wChange:"تغير متوسط الوزن الاسبوعي المتوقع :",
       p:"بروتين", f:"دهون", c:"كارب", pSub:"حد أدنى",
       sl_1:"تنشيف", sl_2:"محافظة", sl_3:"تضخيم", rights:"© 2025 — جميع الحقوق محفوظة",
-      advText: "نتائج متقدمة", neck: "الرقبة (cm)", waist: "الخصر (cm)", hip: "الأرداف (cm)",
-      bfTitle: "نسبة الدهون", fatMass: "كتلة الدهون", leanMass: "الكتلة العضلية", idealW: "الوزن المثالي",
+      advText: "نتائج متقدمة", neck: "الرقبة (cm)", waist: "الخصر (cm)", hip: "الأرداف (cm)", fatRisk: "خطر الدهون", waterPct:"نسبة الماي", musclePct:"نسبة العضل", required:"المطلوب", smm: "الكتلة العضلية", whtrLow:"آمن جداً ↓", whtrSafe:"طبيعي ↔", whtrMid:"متزايد ↑", whtrHigh:"مهدد للصحة !",
+      bfTitle: "نسبة الدهون", fatMass: "كتلة الدهون", leanMass: "صافي كتلة الجسم", idealW: "الوزن المثالي",
       catEss: "أساسي", catAth: "رياضي", catFit: "لائق", catAvg: "متوسط", catObese: "سمين",
-      idealBfAge: "الدهون المثالية (نطاق صحي)", bfLose: "دهون يجب خسارتها",
+      idealBfAge: "الدهون المثالية",
+      idealBfAgeHealthy: "نسبة الدهون المثالية",
+      idealBfAgeSporty: "الدهون المثالية (رياضي - Ideal)",
+      recTitle: "الخطة المقترحة",
+      actMuscleGain: "عضل يجب اكتسابه :",
+      actFatLose: "دهون يجب خسارتها :",
+      actFatGain: "دهون يجب اكتسابها :",
+      muscleStatus: "حالة العضل :",
+      fatStatus: "حالة الدهون :",
+      statusHealthy: "صحي",
+      moreThan: "أعلى من", lessThan: "أقل من", ofPeople: "من الناس",
+      catLow: "منخفض", catNorm: "طبيعي", catHigh: "عالي",
       catEssF: "أساسية", catAthF: "رياضية", catFitF: "لائقة", catAvgF: "متوسطة", catObeseF: "سمينة"
     },
     en: {
-      dir:"ltr", title:"Smart Calorie Planner", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate",
-      txtMale:"Male", txtFemale:"Female", sport:"Include Exercise",
+      dir:"ltr", title:"Smart Calorie Planner", age:"Age", weight:"Weight (kg)", height:"Height (cm)", calc:"Calculate", reset:"Reset",
+      txtMale:"Male", txtFemale:"Female", sport:"Include Exercise", healthyMode:"Healthy", sportyMode:"Athletic", modeHealthyDesc:"Suitable for daily life and normal activity; focuses on stable weight and sustainable health.", modeSportyDesc:"For athletes and high effort; uses tighter targets to support muscle and peak performance/recovery.",
       maintT:"Total Daily Energy Expenditure", target:"Calorie Range", wChange:"Exp. weekly average weight change :",
       p:"Protein", f:"Fat", c:"Carbs", pSub:"Minimum",
       sl_1:"Cut", sl_2:"Maintain", sl_3:"Bulk", rights:"© 2025 — Smart Planner",
-      advText: "Advanced Results", neck: "Neck (cm)", waist: "Waist (cm)", hip: "Hips (cm)",
-      bfTitle: "Body Fat %", fatMass: "Fat Mass", leanMass: "Lean Mass", idealW: "Ideal Weight",
+      advText: "Advanced Results", neck: "Neck (cm)", waist: "Waist (cm)", hip: "Hips (cm)", fatRisk: "Fat Risk", waterPct:"Body Water", musclePct:"Muscle %", required:"Required", smm: "Muscle Mass", whtrLow:"Very safe ↓", whtrSafe:"Normal ↔", whtrMid:"Rising ↑", whtrHigh:"Health risk !",
+      bfTitle: "Body Fat %", fatMass: "Fat Mass", leanMass: "Lean Body Mass", idealW: "Ideal Weight",
       catEss: "Essential", catAth: "Athlete", catFit: "Fitness", catAvg: "Average", catObese: "Obese",
-      idealBfAge: "Ideal Body Fat (Range)", bfLose: "Fat to Lose"
+      idealBfAge: "Ideal Body Fat",
+      idealBfAgeHealthy: "Ideal body fat (Healthy - Average)",
+      idealBfAgeSporty: "Ideal body fat (Athletic - Ideal)",
+      recTitle: "Suggested Plan",
+      actMuscleGain: "Muscle to Gain :",
+      actFatLose: "Fat to Lose :",
+      actFatGain: "Fat to Gain :",
+      muscleStatus: "Muscle Status :",
+      fatStatus: "Fat Status :",
+      statusHealthy: "Healthy",
+      moreThan: "Higher than", lessThan: "Lower than", ofPeople: "of people",
+      catLow: "Low", catNorm: "Normal", catHigh: "High"
     }
   };
 
   function setLang(lang){
     currentLang = lang;
     const t = i18n[lang];
-    document.documentElement.lang = lang; 
+    document.documentElement.lang = lang;
     document.documentElement.dir = t.dir;
     $('title').textContent = t.title;
+    document.title = t.title;
     $('lab-age').textContent = t.age;
     $('lab-weight').textContent = t.weight;
     $('lab-height').textContent = t.height;
-    $('lab-sport').textContent = t.sport;
+    if($('lab-mode-healthy')) $('lab-mode-healthy').textContent = t.healthyMode;
+    if($('lab-mode-sporty')) $('lab-mode-sporty').textContent = t.sportyMode;
     $('calc').textContent = t.calc;
+    $('reset').textContent = t.reset;
+
     $('txt-male').textContent = t.txtMale;
     $('txt-female').textContent = t.txtFemale;
     $('msg-maintenance').textContent = t.maintT;
@@ -498,23 +1251,199 @@
     $('lab-neck').textContent = t.neck;
     $('lab-waist').textContent = t.waist;
     $('lab-hip').textContent = t.hip;
+if($('lab-fat-risk')) $('lab-fat-risk').textContent = t.fatRisk;
+    if($('lab-smm')) $('lab-smm').textContent = t.smm;
     $('lab-bf-title').textContent = t.bfTitle;
     $('lab-fat-mass').textContent = t.fatMass;
     $('lab-lean-mass').textContent = t.leanMass;
     $('lab-ideal-w').textContent = t.idealW;
-    $('lab-ideal-bf-age').textContent = t.idealBfAge;
-    $('lab-bf-lose').textContent = t.bfLose;
+    if($('lab-ideal-bf-age')) $('lab-ideal-bf-age').textContent = (currentLang==='ar' ? 'نسبة الدهون المثالية :' : 'Ideal body fat:');
+    $('advice-title').textContent = t.recTitle;
+    if($('lab-action-fat')) $('lab-action-fat').textContent = t.required;
+    if($('lab-action-muscle')) $('lab-action-muscle').textContent = t.required;
+    if($('lab-water')) $('lab-water').textContent = t.waterPct;
+    if($('lab-muscle-pct')) $('lab-muscle-pct').textContent = t.musclePct;
 
     const sl = $('slider-labels');
-    sl.children[0].textContent = t.sl_1; 
-    sl.children[1].textContent = t.sl_2; 
-    sl.children[2].textContent = t.sl_3; 
+    sl.children[0].textContent = t.sl_1;
+    sl.children[1].textContent = t.sl_2;
+    sl.children[2].textContent = t.sl_3;
 
     $('btn-ar').classList.toggle('active', lang==='ar');
     $('btn-en').classList.toggle('active', lang==='en');
-    
+
+    updateModeUI();
+
     if(tdeeGlobal > 0) calculateTDEE();
-    else updatePlan(); 
+    else updatePlan();
+  }
+
+  function updateModeUI(){
+    const t = i18n[currentLang] || i18n.ar;
+    const sporty = !!($('is-sport') && $('is-sport').checked);
+
+    if($('mode-desc')) $('mode-desc').textContent = sporty ? t.modeSportyDesc : t.modeHealthyDesc;
+
+    if($('lab-mode-healthy')) $('lab-mode-healthy').classList.toggle('active', !sporty);
+    if($('lab-mode-sporty')) $('lab-mode-sporty').classList.toggle('active', sporty);
+
+    if($('lab-ideal-bf-age')) $('lab-ideal-bf-age').textContent = (currentLang==='ar' ? 'نسبة الدهون المثالية :' : 'Ideal body fat:');
+  }
+
+  const bfTargetTables = {
+    healthy: {
+      male: {
+        kids: {
+          6:{min:7.0,max:24.9}, 7:{min:7.0,max:24.9}, 8:{min:7.0,max:24.9},
+          9:{min:7.0,max:25.9}, 10:{min:7.0,max:25.9}, 11:{min:7.0,max:25.9},
+          12:{min:7.0,max:24.9}, 13:{min:7.0,max:24.9}, 14:{min:7.0,max:24.9},
+          15:{min:8.0,max:23.9}, 16:{min:8.0,max:23.9}, 17:{min:9.0,max:22.9}
+        },
+        adult: [
+          {minAge:18, maxAge:39, min:11.0, max:21.9},
+          {minAge:40, maxAge:59, min:12.0, max:22.9},
+          {minAge:60, maxAge:200, min:14.0, max:24.9}
+        ]
+      },
+      female: {
+        kids: {
+          6:{min:8.0,max:24.9}, 7:{min:9.0,max:24.9}, 8:{min:10.0,max:25.9},
+          9:{min:10.0,max:27.9}, 10:{min:11.0,max:28.9}, 11:{min:13.0,max:30.9},
+          12:{min:14.0,max:31.9}, 13:{min:15.0,max:33.9}, 14:{min:17.0,max:34.9},
+          15:{min:18.0,max:35.9}, 16:{min:19.0,max:36.9}, 17:{min:20.0,max:36.9}
+        },
+        adult: [
+          {minAge:18, maxAge:39, min:21.0, max:34.9},
+          {minAge:40, maxAge:59, min:22.0, max:35.9},
+          {minAge:60, maxAge:200, min:23.0, max:36.9}
+        ]
+      }
+    },
+    sporty: {
+      male: [
+        {minAge:18, maxAge:20, min:6.2, max:12.5},
+        {minAge:21, maxAge:25, min:7.3, max:13.6},
+        {minAge:26, maxAge:30, min:10.6, max:16.4},
+        {minAge:31, maxAge:35, min:11.7, max:17.5},
+        {minAge:36, maxAge:40, min:12.7, max:18.6},
+        {minAge:41, maxAge:45, min:13.8, max:19.6},
+        {minAge:46, maxAge:50, min:14.8, max:20.7},
+        {minAge:51, maxAge:55, min:15.9, max:21.8},
+        {minAge:56, maxAge:200, min:17.0, max:22.8}
+      ],
+      female: [
+        {minAge:18, maxAge:20, min:17.7, max:23.2},
+        {minAge:21, maxAge:25, min:18.4, max:23.8},
+        {minAge:26, maxAge:30, min:19.0, max:24.5},
+        {minAge:31, maxAge:35, min:21.5, max:26.7},
+        {minAge:36, maxAge:40, min:22.2, max:27.3},
+        {minAge:41, maxAge:45, min:22.8, max:27.9},
+        {minAge:46, maxAge:50, min:23.4, max:28.6},
+        {minAge:51, maxAge:55, min:24.0, max:29.2},
+        {minAge:56, maxAge:200, min:24.6, max:29.8}
+      ]
+    }
+  };
+
+  const smmPctTables = {
+    healthy: {
+      male: {
+        '18-39': { lowMax: 33.3, normal:{min:33.3,max:39.3}, high:{min:39.4,max:44.0}, veryHighMin:44.1 },
+        '40-59': { lowMax: 33.1, normal:{min:33.1,max:39.1}, high:{min:39.2,max:43.8}, veryHighMin:43.9 },
+        '60-80': { lowMax: 32.9, normal:{min:32.9,max:38.9}, high:{min:39.0,max:43.6}, veryHighMin:43.7 }
+      },
+      female: {
+        '18-39': { lowMax: 24.3, normal:{min:24.3,max:30.3}, high:{min:30.4,max:35.3}, veryHighMin:35.4 },
+        '40-59': { lowMax: 24.1, normal:{min:24.1,max:30.1}, high:{min:30.2,max:35.1}, veryHighMin:35.2 },
+        '60-80': { lowMax: 23.9, normal:{min:23.9,max:29.9}, high:{min:30.0,max:34.9}, veryHighMin:35.0 }
+      }
+    },
+    sporty: {
+      male: {
+        '18-35': { min: 40.0, max: 44.0, type:'range' },
+        '36-55': { min: 36.0, max: 40.0, type:'range' },
+        '56-75': { min: 32.0, max: 35.0, type:'range' },
+        '76-85': { max: 31.0, type:'lt' }
+      },
+      female: {
+        '18-35': { min: 31.0, max: 33.0, type:'range' },
+        '36-55': { min: 29.0, max: 31.0, type:'range' },
+        '56-75': { min: 27.0, max: 30.0, type:'range' },
+        '76-85': { max: 26.0, type:'lt' }
+      }
+    }
+  };
+
+  function getSmmAgeBandHealthy(age){
+    const a = Number(age) || 0;
+    if(a >= 60) return '60-80';
+    if(a >= 40) return '40-59';
+    return '18-39';
+  }
+  function getSmmAgeBandSporty(age){
+    const a = Number(age) || 0;
+    if(a >= 76) return '76-85';
+    if(a >= 56) return '56-75';
+    if(a >= 36) return '36-55';
+    return '18-35';
+  }
+
+  function getSmmHealthyRanges(gender, age){
+    const band = getSmmAgeBandHealthy(age);
+    return smmPctTables.healthy[gender] ? smmPctTables.healthy[gender][band] : null;
+  }
+  function getSmmSportyRanges(gender, age){
+    const band = getSmmAgeBandSporty(age);
+    return smmPctTables.sporty[gender] ? smmPctTables.sporty[gender][band] : null;
+  }
+
+  function classifySmmHealthy(pct, ranges){
+    if(!ranges || !isFinite(pct)) return { label_en:'—', label_ar:'—', color:'transparent', kind:'na' };
+    const p = Number(pct);
+    if(p < ranges.lowMax) return { label_en:'Low', label_ar:'منخفض', color:'#ef4444', kind:'low' };
+    if(p <= ranges.normal.max) return { label_en:'Normal', label_ar:'طبيعي', color:'#22c55e', kind:'normal' };
+    if(p <= ranges.high.max) return { label_en:'High', label_ar:'مرتفع', color:'#f59e0b', kind:'high' };
+    return { label_en:'Very High', label_ar:'مرتفع جدًا', color:'#8b5cf6', kind:'veryHigh' };
+  }
+
+  function classifySmmSporty(pct, ranges){
+    if(!ranges || !isFinite(pct)) return { label_en:'—', label_ar:'—', color:'transparent', kind:'na' };
+    const p = Number(pct);
+    if(ranges.type === 'lt'){
+      if(p <= ranges.max) return { label_en:'Within reference', label_ar:'ضمن المرجع', color:'#22c55e', kind:'in' };
+      return { label_en:'Above reference', label_ar:'أعلى من المرجع', color:'#3b82f6', kind:'above' };
+    }
+    if(p < ranges.min) return { label_en:'Below target', label_ar:'أقل من الهدف', color:'#f59e0b', kind:'below' };
+    if(p <= ranges.max) return { label_en:'In target', label_ar:'ضمن الهدف', color:'#22c55e', kind:'in' };
+    return { label_en:'Above target', label_ar:'أعلى من الهدف', color:'#3b82f6', kind:'above' };
+  }
+
+function getBfTargetRange(gender, age, isSporty){
+    const a = Math.max(0, Math.floor(Number(age) || 0));
+
+    if(isSporty && a < 18) return getBfTargetRange(gender, a, false);
+
+    if(isSporty){
+      const rows = bfTargetTables.sporty[gender] || [];
+      for(const r of rows){
+        if(a >= r.minAge && a <= r.maxAge) return {min:r.min, max:r.max};
+      }
+      const last = rows[rows.length - 1];
+      if(last) return {min:last.min, max:last.max};
+    } else {
+      const t = bfTargetTables.healthy[gender];
+      if(!t) return {min:(gender==='male'?10:20), max:(gender==='male'?20:30)};
+
+      if(a >= 6 && a <= 17 && t.kids[a]) return {min:t.kids[a].min, max:t.kids[a].max};
+
+      for(const r of t.adult){
+        if(a >= r.minAge && a <= r.maxAge) return {min:r.min, max:r.max};
+      }
+      const last = t.adult[t.adult.length - 1];
+      if(last) return {min:last.min, max:last.max};
+    }
+
+    return {min:(gender==='male'?10:20), max:(gender==='male'?20:30)};
   }
 
   function normalize(str){
@@ -526,58 +1455,38 @@
     return s;
   }
 
-  // 1. نطاق الدهون (Fat): إجبار الاتجاه بناءً على اللغة
+  function formatRangeHTML(val1, val2, unit, arrowOverride){
+    const n1 = parseFloat(val1);
+    const n2 = parseFloat(val2);
+    const min = Math.min(n1, n2);
+    const max = Math.max(n1, n2);
+    const arrow = arrowOverride ? arrowOverride : '↔';
+    const dirStyle = 'direction: ltr;';
+    const left  = (currentLang === 'ar') ? max : min;
+    const right = (currentLang === 'ar') ? min : max;
+    return `<div class="range-flex" style="${dirStyle}">
+        <span class="val-num">${left}${unit ? '<small>'+unit+'</small>': ''}</span>
+        <span class="arrow">${arrow}</span>
+        <span class="val-num">${right}${unit ? '<small>'+unit+'</small>': ''}</span>
+    </div>`;
+  }
+
   function formatFatRangeHTML(val1, val2, unit){
+    return formatRangeHTML(val1, val2, unit, '↔');
+  }
+
+  function formatWeightHTML(val1, val2){
     const min = Math.min(val1, val2);
     const max = Math.max(val1, val2);
-    const arrow = currentLang === 'ar' ? '←' : '→';
-    
-    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
-    
-    // تم إضافة الوحدة للرقم الأول أيضا
-    const uStr = unit ? `<small>${unit}</small>` : '';
-    
+    if(Math.abs(min) < 0.01 && Math.abs(max) < 0.01) return `<span class="val-num">~ 0 <small>kg</small></span>`;
+    const left  = (currentLang === 'ar') ? max : min;
+    const right = (currentLang === 'ar') ? min : max;
+    const fmt = (v)=> (v>0?'+': '') + v.toFixed(2);
+    const dirStyle = 'direction: ltr;';
     return `<div class="range-flex" style="${dirStyle}">
-        <span class="val-num">${min}${uStr}</span>
-        <span class="arrow">${arrow}</span>
-        <span class="val-num">${max}${uStr}</span>
-    </div>`;
-  }
-
-  // 2. نطاق السعرات والكارب (مع إمكانية عكس السهم)
-  function formatRangeHTML(val1, val2, unit, arrowOverride){
-    let min = Math.min(val1, val2);
-    let max = Math.max(val1, val2);
-    const arrow = arrowOverride ? arrowOverride : (currentLang === 'ar' ? '←' : '→');
-    
-    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
-    const uStr = unit ? `<small>${unit}</small>` : '';
-
-    return `<div class="range-flex" style="${dirStyle}">
-        <span class="val-num">${min}${uStr}</span>
-        <span class="arrow">${arrow}</span>
-        <span class="val-num">${max}${uStr}</span>
-    </div>`;
-  }
-  
-  // 3. نطاق الوزن (سهم باتجاهين دائماً)
-  function formatWeightHTML(val1, val2){
-    const abs1 = Math.abs(val1); const abs2 = Math.abs(val2);
-    let startVal, endVal;
-    if(abs1 < abs2) { startVal = val1; endVal = val2; }
-    else { startVal = val2; endVal = val1; }
-    
-    const sStr = (startVal > 0 ? "+" : "") + startVal.toFixed(2);
-    const eStr = (endVal > 0 ? "+" : "") + endVal.toFixed(2);
-    const arrow = '↔';
-
-    if(abs1 < 0.01 && abs2 < 0.01) return `<span class="val-num">~ 0 kg</span>`;
-
-    const dirStyle = currentLang === 'ar' ? 'direction: rtl;' : 'direction: ltr;';
-    return `<div class="range-flex" style="${dirStyle}">
-        <span class="val-num">${sStr} kg</span>
-        <span class="arrow">${arrow}</span>
-        <span class="val-num">${eStr} kg</span>
+        <span class="val-num">${fmt(left)} <small>kg</small></span>
+        <span class="arrow">↔</span>
+        <span class="val-num">${fmt(right)} <small>kg</small></span>
     </div>`;
   }
 
@@ -585,350 +1494,694 @@
       const t = i18n[currentLang];
       const isArFemale = (currentLang === 'ar' && gender === 'female');
       const lbl = (key) => isArFemale ? t[key+'F'] : t[key];
-
-      const cRed = '#ef4444';
-      const cBlue = '#3b82f6'; 
-      const cGreen = '#22c55e';
-      const cYellow = '#eab308';
-
+      const cRed = '#ef4444'; const cBlue = '#3b82f6'; const cGreen = '#22c55e'; const cYellow = '#eab308';
       if(gender === 'male') {
-          if(bf < 6) return { name: lbl('catEss'), color:cRed }; 
-          if(bf < 14) return { name: lbl('catAth'), color:cBlue }; 
-          if(bf < 18) return { name: lbl('catFit'), color:cGreen }; 
-          if(bf < 25) return { name: lbl('catAvg'), color:cYellow }; 
-          return { name: lbl('catObese'), color:cRed }; 
+          if(bf < 6) return { label: lbl('catEss'), color:cRed };
+          if(bf < 14) return { label: lbl('catAth'), color:cBlue };
+          if(bf < 18) return { label: lbl('catFit'), color:cGreen };
+          if(bf < 25) return { label: lbl('catAvg'), color:cYellow };
+          return { label: lbl('catObese'), color:cRed };
       } else {
-          if(bf < 14) return { name: lbl('catEss'), color:cRed };    
-          if(bf < 21) return { name: lbl('catAth'), color:cBlue };   
-          if(bf < 25) return { name: lbl('catFit'), color:cGreen };  
-          if(bf < 32) return { name: lbl('catAvg'), color:cYellow }; 
-          return { name: lbl('catObese'), color:cRed };              
+          if(bf < 14) return { label: lbl('catEss'), color:cRed };
+          if(bf < 21) return { label: lbl('catAth'), color:cBlue };
+          if(bf < 25) return { label: lbl('catFit'), color:cGreen };
+          if(bf < 32) return { label: lbl('catAvg'), color:cYellow };
+          return { label: lbl('catObese'), color:cRed };
       }
   }
+
+  function getWHtRMeta(whtr){
+    const t = i18n[currentLang];
+    if(!isFinite(whtr)) return {label:'—', color:'transparent'};
+    if(whtr < 0.40) return {label:t.whtrLow, color:'var(--c-blue)'};
+    if(whtr < 0.50) return {label:t.whtrSafe, color:'var(--c-green)'};
+    if(whtr < 0.60) return {label:t.whtrMid, color:'var(--c-orange)'};
+    return {label:t.whtrHigh, color:'var(--c-red)'};
+  }
+
+
+function calcGindanSMM(weightKg, heightCm, age, gender, waistCm, hipCm){
+  const w = Number(weightKg) || 0;
+  const h = Number(heightCm) || 0; // cm
+  const a = Number(age) || 0;
+  const waist = Number(waistCm) || 0; // cm
+  const hip = Number(hipCm) || 0;     // cm
+
+  if(gender === 'male'){
+    // Al-Gindan et al. (2014) – men
+    if(isFinite(w) && isFinite(waist) && isFinite(hip) && isFinite(a) && w>0 && waist>0 && hip>0){
+      return 39.5 + (0.665 * w) - (0.185 * waist) - (0.418 * hip) - (0.080 * a);
+    }
+    return NaN;
+  }
+
+  // women
+  if(isFinite(w) && isFinite(h) && isFinite(hip) && isFinite(a) && w>0 && h>0 && hip>0){
+    return 2.89 + (0.255 * w) + (0.118 * h) - (0.175 * hip) - (0.038 * a);
+  }
+  return NaN;
+}
+
+function calcWatsonTBW(weightKg, heightCm, age, gender){
+  if(!(isFinite(weightKg) && isFinite(heightCm) && isFinite(age))) return NaN;
+  if(gender === 'male'){
+    return 2.447 - (0.09516 * age) + (0.1074 * heightCm) + (0.3362 * weightKg);
+  }
+  return -2.097 + (0.1069 * heightCm) + (0.2466 * weightKg);
+}
+
+function getWaterRange(gender, isSporty){
+  if(gender === 'female'){
+    return isSporty ? {min:50, max:65} : {min:45, max:60};
+  }
+  return isSporty ? {min:55, max:70} : {min:50, max:65};
+}
 
   function renderBodyFatBar(gender, currentBF) {
       const t = i18n[currentLang];
       const isArFemale = (currentLang === 'ar' && gender === 'female');
       const lbl = (key) => isArFemale ? t[key+'F'] : t[key];
-
       const barBase = $('bf-bar-base');
       const labelsCont = $('bf-labels-container');
       const ticksCont = $('bf-ticks-container');
       const marker = $('bf-marker');
-
-      labelsCont.innerHTML = '';
-      ticksCont.innerHTML = '';
-
-      const cRed = '#ef4444';
-      const cBlue = '#3b82f6';
-      const cGreen = '#22c55e';
-      const cYellow = '#eab308';
-
-      let ranges = [];
-      let maxScale = 0;
-      
+      labelsCont.innerHTML = ''; ticksCont.innerHTML = '';
+      const cRed = '#ef4444'; const cBlue = '#3b82f6'; const cGreen = '#22c55e'; const cYellow = '#eab308';
+      let ranges = []; let maxScale = 0;
       if(gender === 'male') {
-          maxScale = 45; 
+          maxScale = 45;
           ranges = [
-              { label: lbl('catEss'), min:0,  max:6,  color:cRed }, 
-              { label: lbl('catAth'), min:6,  max:14, color:cBlue }, 
-              { label: lbl('catFit'), min:14, max:18, color:cGreen }, 
-              { label: lbl('catAvg'), min:18, max:25, color:cYellow }, 
-              { label: lbl('catObese'), min:25, max:maxScale, color:cRed } 
+              { label: lbl('catEss'), min:0,  max:6,  color:cRed },
+              { label: lbl('catAth'), min:6,  max:14, color:cBlue },
+              { label: lbl('catFit'), min:14, max:18, color:cGreen },
+              { label: lbl('catAvg'), min:18, max:25, color:cYellow },
+              { label: lbl('catObese'), min:25, max:maxScale, color:cRed }
           ];
       } else {
           maxScale = 55;
           ranges = [
-              { label: lbl('catEss'), min:0, max:14, color:cRed },      
-              { label: lbl('catAth'), min:14, max:21, color:cBlue },    
-              { label: lbl('catFit'), min:21, max:25, color:cGreen },   
-              { label: lbl('catAvg'), min:25, max:32, color:cYellow },  
-              { label: lbl('catObese'), min:32, max:maxScale, color:cRed } 
+              { label: lbl('catEss'), min:0, max:14, color:cRed },
+              { label: lbl('catAth'), min:14, max:21, color:cBlue },
+              { label: lbl('catFit'), min:21, max:25, color:cGreen },
+              { label: lbl('catAvg'), min:25, max:32, color:cYellow },
+              { label: lbl('catObese'), min:32, max:maxScale, color:cRed }
           ];
       }
-
       const isRTL = (currentLang === 'ar');
-      const gradDir = isRTL ? 'to left' : 'to right';
-
+      const gradDir = isRTL ? 'to left': 'to right';
       let gradStr = `linear-gradient(${gradDir}`;
       ranges.forEach((r, i) => {
           const startPct = (r.min / maxScale) * 100;
           const endPct = (r.max / maxScale) * 100;
-          const buffer = 1.5; 
-          let solidStart = startPct + buffer;
-          let solidEnd = endPct - buffer;
-          if(i === 0) solidStart = 0;
-          if(i === ranges.length - 1) solidEnd = 100;
+          const buffer = 1.5;
+          let solidStart = startPct + buffer; let solidEnd = endPct - buffer;
+          if(i === 0) solidStart = 0; if(i === ranges.length - 1) solidEnd = 100;
           gradStr += `, ${r.color} ${solidStart.toFixed(1)}%, ${r.color} ${solidEnd.toFixed(1)}%`;
       });
       gradStr += ')';
       barBase.style.background = gradStr;
-
       ranges.forEach((r, idx) => {
           const midVal = (r.min + Math.min(r.max, maxScale)) / 2;
           const midPct = (midVal / maxScale) * 100;
-
           const label = document.createElement('span');
           label.className = 'bf-seg-label';
           label.textContent = r.label;
-          if(isRTL) label.style.right = midPct + "%";
-          else label.style.left = midPct + "%";
+          if(isRTL) label.style.right = midPct + "%"; else label.style.left = midPct + "%";
           labelsCont.appendChild(label);
-
           const startPct = (r.min / maxScale) * 100;
           const group = document.createElement('div');
           group.className = 'bf-tick-group';
-          if(isRTL) group.style.right = startPct + "%";
-          else group.style.left = startPct + "%";
-
+          if(isRTL) group.style.right = startPct + "%"; else group.style.left = startPct + "%";
           const mark = document.createElement('div');
           mark.className = 'bf-tick-mark';
           const num = document.createElement('span');
           num.className = 'bf-tick-num';
           num.textContent = r.min + '%';
-          group.appendChild(mark);
-          group.appendChild(num);
-          ticksCont.appendChild(group);
+          group.appendChild(mark); group.appendChild(num); ticksCont.appendChild(group);
       });
-
-      let val = currentBF;
-      if(val < 0) val = 0;
-      if(val > maxScale) val = maxScale;
+      let val = currentBF; if(val < 0) val = 0; if(val > maxScale) val = maxScale;
       const markerPct = (val / maxScale) * 100;
-      
-      marker.style.left = 'auto'; 
-      marker.style.right = 'auto';
-      if(isRTL) marker.style.right = markerPct + "%";
-      else marker.style.left = markerPct + "%";
+      marker.style.left = 'auto'; marker.style.right = 'auto';
+      if(isRTL) marker.style.right = markerPct + "%"; else marker.style.left = markerPct + "%";
   }
 
   function calculateAdvanced(w, h, gender, age){
      const card = $('adv-result-card');
-     
      const neck = parseFloat(normalize($('neck').value));
      const waist = parseFloat(normalize($('waist').value));
      const hip = parseFloat(normalize($('hip').value));
+const t = i18n[currentLang];
 
      const h_m = h / 100;
-     const minW = 18.5 * (h_m * h_m);
-     const maxW = 24.9 * (h_m * h_m);
-     $('val-ideal-w').innerHTML = formatRangeHTML(minW.toFixed(1), maxW.toFixed(1), " kg", '↔'); 
+     const bmiMinW = 18.5 * (h_m * h_m);
+     const bmiMaxW = 25.0 * (h_m * h_m);
 
-     let bf = 0;
+     $('val-ideal-w').innerHTML = formatRangeHTML(bmiMinW.toFixed(1), bmiMaxW.toFixed(1), " kg", '↔');
+
+     let bf = null;
      let hasBF = false;
 
-     if(neck && waist && (gender === 'male' || (gender === 'female' && hip))) {
+     if(neck > 0 && waist > 0 && (gender === 'male' || (gender === 'female' && hip > 0))) {
          if(gender === 'male') {
-             if(waist - neck > 0) {
-                bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(h)) - 450;
-                hasBF = true;
+             const x = waist - neck;
+             if(x > 0) {
+                 bf = 495 / (1.0324 - 0.19077 * Math.log10(x) + 0.15456 * Math.log10(h)) - 450;
+                 hasBF = true;
              }
          } else {
-             if((waist + hip - neck) > 0) {
-                bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(h)) - 450;
-                hasBF = true;
+             const x = waist + hip - neck;
+             if(x > 0) {
+                 bf = 495 / (1.29579 - 0.35004 * Math.log10(x) + 0.22100 * Math.log10(h)) - 450;
+                 hasBF = true;
              }
          }
      }
 
-     if(hasBF && bf > 0) {
-         bf = parseFloat(bf.toFixed(1));
-         $('val-bf-pct').textContent = bf + "%";
-         
-         const meta = getBodyFatMeta(bf, gender);
-         const tag = $('val-bf-cat');
-         tag.textContent = meta.name;
-         tag.style.backgroundColor = meta.color;
-         tag.style.color = '#fff';
-         
+     if(hasBF){
+         bf = Math.max(0, Math.min(75, bf));
+
+         const isSporty = !!($('is-sport') && $('is-sport').checked);
+         // We'll use the *healthy* SMMI tiers for body-composition classification (per user preference)
+         let smmiMetaHealthy = null;
+         const bfRange = getBfTargetRange(gender, age, isSporty);
+         const safeBFMin = bfRange.min;
+         const safeBFMax = bfRange.max;
+
+         $('val-bf-pct').textContent = bf.toFixed(1) + "%";
+         const bfMeta = getBodyFatMeta(bf, gender);
+         $('val-bf-cat').textContent = bfMeta.label;
+         $('val-bf-cat').style.backgroundColor = bfMeta.color;
+
+         renderBodyFatBar(gender, bf);
+
          const fatMass = w * (bf/100);
          const leanMass = w - fatMass;
          $('val-fat-mass').textContent = fatMass.toFixed(1) + " kg";
          $('val-lean-mass').textContent = leanMass.toFixed(1) + " kg";
-         
-         renderBodyFatBar(gender, bf);
 
-         if(age) {
-             // New Realistic Range Logic
-             const safeMin = gender === 'male' ? 10 : 20;
-             const safeMax = gender === 'male' ? 20 : 30;
-             
-             // Update Ideal BF Label using formatFatRangeHTML to fix Arabic direction
-             $('val-ideal-bf-age').innerHTML = formatFatRangeHTML(safeMin, safeMax, "%");
-             
-             const lblElem = $('lab-bf-lose');
-             const valElem = $('val-bf-lose');
-
-             if(bf > safeMax) {
-                 const targetW = leanMass / (1 - (safeMax/100));
-                 const toLose = w - targetW;
-                 lblElem.textContent = currentLang === 'ar' ? "دهون يجب خسارتها" : "Fat to Lose";
-                 valElem.textContent = toLose.toFixed(1) + " kg";
-                 valElem.style.color = 'var(--c-orange)';
-             } else if (bf < safeMin) {
-                 const targetW = leanMass / (1 - (safeMin/100));
-                 const toGain = targetW - w;
-                 lblElem.textContent = currentLang === 'ar' ? "دهون يجب اكتسابها" : "Fat to Gain";
-                 valElem.textContent = toGain.toFixed(1) + " kg";
-                 valElem.style.color = 'var(--c-blue)';
-             } else {
-                 // Inside Safe Range
-                 const midPoint = (safeMin + safeMax) / 2;
-                 lblElem.textContent = currentLang === 'ar' ? "الحالة" : "Status";
-                 
-                 if (bf <= midPoint) {
-                     valElem.textContent = currentLang === 'ar' ? "صحي جداً" : "Very Healthy";
-                     valElem.style.color = 'var(--c-blue)';
-                 } else {
-                     valElem.textContent = currentLang === 'ar' ? "صحي" : "Healthy";
-                     valElem.style.color = 'var(--c-green)';
-                 }
-             }
-         } else {
-             $('val-ideal-bf-age').textContent = "—";
-             $('val-bf-lose').textContent = "—";
+         const whtrTag = $('tag-whtr');
+         if(whtrTag){
+           if(isFinite(waist) && isFinite(h) && waist>0 && h>0){
+             const whtr = waist / h;
+             const meta = getWHtRMeta(whtr);
+             whtrTag.textContent = meta.label;
+             whtrTag.style.backgroundColor = meta.color;
+           } else {
+             whtrTag.textContent = '—';
+             whtrTag.style.backgroundColor = 'transparent';
+           }
          }
+
+         const waterEl = $('val-water-pct');
+         const waterTag = $('tag-water-level');
+         const waterRangeEl = $('val-water-range');
+         if(waterEl || waterTag || waterRangeEl){
+           const tbw = calcWatsonTBW(w, h, age, gender); // liters ≈ kg
+           const waterPct = (isFinite(tbw) && tbw > 0 && isFinite(w) && w > 0) ? ((tbw / w) * 100) : NaN;
+           const r = getWaterRange(gender, isSporty);
+
+           if(waterEl){
+             waterEl.textContent = isFinite(waterPct) ? (waterPct.toFixed(1) + "%") : "—";
+           }
+           if(waterRangeEl){
+             if(r){ waterRangeEl.innerHTML = formatRangeHTML(r.min, r.max, '%', '↔'); }
+             else { waterRangeEl.textContent = '—'; }
+           }
+           if(waterTag){
+             if(!isFinite(waterPct) || !r){
+               waterTag.textContent = "—";
+               waterTag.style.backgroundColor = "transparent";
+             } else if(waterPct < r.min){
+               waterTag.textContent = (currentLang === 'ar') ? "جفاف" : "Dehydrated";
+               waterTag.style.backgroundColor = "var(--c-red)";
+             } else if(waterPct <= r.max){
+               waterTag.textContent = (currentLang === 'ar') ? "مناسب" : "Healthy";
+               waterTag.style.backgroundColor = "var(--c-green)";
+             } else {
+               waterTag.textContent = (currentLang === 'ar') ? "مرتفع" : "High";
+               waterTag.style.backgroundColor = "var(--c-blue)";
+             }
+           }
+         }
+
+         const smmEl = $('val-smm');
+         const musclePctEl = $('val-muscle-pct');
+         const smmTag = $('tag-smm-level');
+
+         const smmRangeEl = $('val-smm-range');
+         const smmRangeLabel = $('lab-smm-range');
+
+         const musclePctRangeEl = $('val-muscle-pct-range');
+         const musclePctRangeLabel = $('lab-muscle-pct-range');
+
+         const formatUpperHTML = (maxVal, unit) => {
+           const dirStyle = 'direction: ltr;';
+           const u = unit ? `<small>${unit}</small>` : '';
+           return `<div class="range-flex" style="${dirStyle}">
+             <span class="val-num">≤ ${maxVal}${u}</span>
+           </div>`;
+         };
+
+         
+if(smmEl){
+  // Muscle mass (kg) from Al-Gindan equation
+  let smm = calcGindanSMM(w, h, age, gender, waist, hip);
+  const smmOk = (isFinite(smm) && smm > 0);
+  smmEl.textContent = smmOk ? (smm.toFixed(1) + " kg") : "—";
+
+  const smmi = smmOk ? (smm / (h_m * h_m)) : NaN;
+  const smmiMeta = smmOk ? gradeSMMI(smmi, gender, isSporty, age) : null;
+  // Always compute healthy-tier metadata for body-composition (even if athletic mode is selected)
+  smmiMetaHealthy = smmOk ? gradeSMMI(smmi, gender, false, age) : null;
+
+  if(smmTag){
+    if(smmiMeta){
+      smmTag.textContent = (currentLang === 'ar') ? smmiMeta.ar : smmiMeta.en;
+      smmTag.style.backgroundColor = smmiMeta.bg;
+      smmTag.style.color = smmiMeta.fg;
+      smmTag.style.border = `1px solid ${smmiMeta.bd}`;
+      smmTag.style.boxShadow = smmiMeta.shadow;
+    } else {
+      smmTag.textContent = '—';
+      smmTag.style.backgroundColor = 'transparent';
+    }
+  }
+
+  if(smmRangeEl){
+    if(smmiMeta && smmiMeta.hasNext && isFinite(smmiMeta.nextMin)){
+      const kgRemaining = Math.max(0, (smmiMeta.nextMin - smmi) * (h_m * h_m));
+      if(currentLang === 'ar'){
+        // مطلوب: اللي بعد السهم يصير قبل السهم (تبديل أماكن المستوى والوزن)
+        smmRangeEl.style.direction = 'rtl';
+        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} kg</span><span class="arr">←</span><span class="lvl">${smmiMeta.nextAr}</span>`;
+      } else {
+        smmRangeEl.style.direction = 'ltr';
+        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} kg</span><span class="arr">←</span><span class="lvl">${smmiMeta.nextEn}</span>`;
+      }
+      smmRangeEl.style.color = 'var(--c-green)';
+      smmRangeEl.style.fontWeight = '800';
+      smmRangeEl.style.textShadow = '0 1px 10px rgba(0,0,0,.25)';
+    } else if(smmiMeta){
+      smmRangeEl.textContent = (currentLang === 'ar') ? 'ممتاز' : 'Excellent';
+      smmRangeEl.style.color = 'var(--c-green)';
+      smmRangeEl.style.fontWeight = '800';
+      smmRangeEl.style.textShadow = '0 1px 10px rgba(0,0,0,.25)';
+    } else {
+      smmRangeEl.textContent = '—';
+      smmRangeEl.style.color = 'rgba(255,255,255,.55)';
+      smmRangeEl.style.fontWeight = '600';
+      smmRangeEl.style.textShadow = 'none';
+    }
+  }
+}
+const denom = (h_m * h_m);
+         const fmi = fatMass / denom;
+         const ffmi = leanMass / denom;
+
+         const ageGroup = getAgeGroup(age);
+         const pFMI = getPercentile(fmi, fmiTable[gender][ageGroup]);
+         const pFFMI = isSporty ? getAthleteFFMIPercentile(ffmi, gender) : getPercentile(ffmi, ffmiTable[gender][ageGroup]);
+
+         const ffmiP25 = isSporty ? getAthleteFFMIP25(gender) : ffmiTable[gender][ageGroup].p25;
+         const leanTarget = ffmiP25 * denom;
+         const leanNeed = Math.max(0, leanTarget - leanMass);
+
+         const fmiClass = getClassification(pFMI);
+         const ffmiClass = getClassification(pFFMI);
+
+         const pf = (v)=> (Math.round(v*10)/10).toFixed(1);
+
+         const tagFMI = $('tag-fmi');
+         const tagFFMI = $('tag-ffmi');
+
+         function pctBand(p){
+           if(p < 25) return 'Low';
+           if(p <= 75) return 'Normal';
+           return 'High';
+         }
+
+         
+
+         const pctPhrase = (p)=>{
+           if(!isFinite(p)) return '—';
+           const pp = Math.max(0, Math.min(100, Math.round(p)));
+           if(currentLang === 'ar'){
+             return (pp >= 50) ? (`أعلى من ${pp}% من فئتك`) : (`أقل من ${pp}% من فئتك`);
+           }
+           return (pp >= 50) ? (`Higher than ${pp}% of your group`) : (`Lower than ${pp}% of your group`);
+         };
+
+         const classifyBodyComp = (pFMI)=>{
+           // fat band from FMI percentile
+           const fb = pctBand(pFMI);
+           // muscle band from SMMI (healthy tiers)
+           const mb = (()=>{
+             if(!smmiMetaHealthy || !isFinite(smmiMetaHealthy.idx)) return null;
+             // Healthy tiers are ordered from strongest to weakest.
+             // High: top 3 (Very high / High / Elevated)
+             // Normal: next 2 (Normal / Average)
+             // Low: remaining (Low / Very low / Severe low)
+             if(smmiMetaHealthy.idx <= 2) return 'High';
+             if(smmiMetaHealthy.idx <= 4) return 'Normal';
+             return 'Low';
+           })();
+           if(!mb) return null;
+           // 3x3 grid (fat band x lean band)
+           if(fb === 'High' && mb === 'Low')    return { ar:'زوائد دهنية', en:'Skinny-fat', color:'var(--c-red)' };
+           if(fb === 'High' && mb === 'Normal') return { ar:'سمين',      en:'Overfat',    color:'var(--c-orange)' };
+           if(fb === 'High' && mb === 'High')   return { ar:'ضخم البنية', en:'Big build', color:'var(--c-orange)' };
+
+           if(fb === 'Normal' && mb === 'Low')    return { ar:'خامل',   en:'Low muscle', color:'var(--c-yellow)' };
+           if(fb === 'Normal' && mb === 'Normal') return { ar:'عادي',   en:'Average',    color:'var(--c-green)' };
+           if(fb === 'Normal' && mb === 'High')   return { ar:'عضلي دهني',   en:'Fit',        color:'var(--c-green)' };
+
+           if(fb === 'Low' && mb === 'Low')    return { ar:'هزيل',   en:'Lean',      color:'var(--c-blue)' };
+           if(fb === 'Low' && mb === 'Normal') return { ar:'متناسق',  en:'Defined',   color:'var(--c-blue)' };
+           return { ar:'مفتول العضلات', en:'Muscular', color:'var(--c-blue)' }; // Low fat + High lean
+         };
+
+const gFMI = gradeFMIChart(fmi, gender);
+
+         const fatLabelEl = $('lab-action-fat');
+         const fatValEl   = $('val-action-fat');
+         if(fatLabelEl) fatLabelEl.textContent = '';
+         if(fatValEl){
+           const normFatMin = gFMI.normalLow  * denom;
+           const normFatMax = gFMI.normalHigh * denom;
+           fatValEl.innerHTML = formatRangeHTML(normFatMin.toFixed(1), normFatMax.toFixed(1), ' kg', '↔');
+           fatValEl.style.color = 'var(--c-green)';
+         }
+
+         
+const leanLabelEl = $('lab-action-muscle');
+const leanValEl   = $('val-action-muscle');
+if(leanLabelEl) leanLabelEl.textContent = '';
+if(leanValEl){
+  const pctPhraseLean = (p)=>{
+    if(!isFinite(p)) return '—';
+    const pp = Math.max(0, Math.min(100, Math.round(p)));
+    const rem = Math.max(0, Math.min(100, 100 - pp));
+    if(currentLang === 'ar'){
+      return (pp > 50) ? (`أعلى من ${pp}% من فئتك`) : (`أقل من ${rem}% من فئتك`);
+    }
+    return (pp > 50) ? (`Higher than ${pp}% of your group`) : (`Lower than ${rem}% of your group`);
+  };
+  leanValEl.textContent = pctPhraseLean(pFFMI);
+  leanValEl.style.color = 'rgba(255,255,255,.78)';
+  leanValEl.style.fontWeight = '700';
+  leanValEl.style.textShadow = '0 1px 10px rgba(0,0,0,.18)';
+}
+// (body-composition uses SMMI healthy tiers for the muscle axis)
+
+         if(currentLang === 'ar'){
+           tagFMI.textContent = gFMI.ar;
+         } else {
+           tagFMI.textContent = gFMI.en;
+         }
+         tagFMI.style.backgroundColor = gFMI.bg;
+         tagFMI.style.color = gFMI.fg;
+         tagFMI.style.border = `1px solid ${gFMI.bd}`;
+         tagFMI.style.boxShadow = gFMI.shadow;
+
+         const gFFMI = gradeFFMI(ffmi, gender, isSporty);
+         if(currentLang === 'ar'){
+           tagFFMI.textContent = gFFMI.ar;
+         } else {
+           tagFFMI.textContent = gFFMI.en;
+         }
+         tagFFMI.style.backgroundColor = gFFMI.bg;
+         tagFFMI.style.color = gFFMI.fg;
+         tagFFMI.style.border = `1px solid ${gFFMI.bd}`;
+         tagFFMI.style.boxShadow = gFFMI.shadow;
+
+
+         const bcVal = $('val-bodycomp');
+         const bcPcts = $('val-bodycomp-pcts');
+         if(bcVal){
+           const bc = classifyBodyComp(pFMI);
+           if(bc){
+             bcVal.textContent = (currentLang === 'ar') ? bc.ar : bc.en;
+             bcVal.style.color = bc.color;
+             bcVal.style.fontWeight = '900';
+             bcVal.style.textShadow = '0 1px 10px rgba(0,0,0,.25)';
+           } else {
+             bcVal.textContent = '—';
+             bcVal.style.color = 'var(--muted)';
+             bcVal.style.fontWeight = '700';
+             bcVal.style.textShadow = 'none';
+           }
+         }
+         if(bcPcts){
+           // Remove the FMI/FFMI lines under body-composition (requested)
+           bcPcts.textContent = '';
+           bcPcts.style.display = 'none';
+         }
+
+         $('val-ideal-bf-age').innerHTML = formatRangeHTML(safeBFMin, safeBFMax, "%", '↔');
+
+         const wAtMinBF = leanMass / (1 - safeBFMin/100);
+         const wAtMaxBF = leanMass / (1 - safeBFMax/100);
+
+         $('val-ideal-w').innerHTML = formatRangeHTML(wAtMinBF.toFixed(1), wAtMaxBF.toFixed(1), ' kg', '↔');
+
+         let recId = 'maint';
+         const bmi = w / (h_m * h_m);
+
+         const wMin = bmiMinW;           // BMI 18.5
+         const wMax = bmiMaxW;           // BMI 25.0 (upper edge)
+         const wZone = (w < wMin) ? 'under' : ((w > wMax) ? 'over' : 'in');
+
+         function pickPlan(g, bfPct, zone){
+            if(g === 'male'){
+               if(bfPct < 10){
+                  if(zone === 'under') return 'agg_bulk';
+                  if(zone === 'in')    return 'bulk';
+                  return 'lean';
+               } else if(bfPct < 15 || Math.abs(bfPct-15) < 1e-9){
+                  if(zone === 'under') return 'bulk';
+                  if(zone === 'in')    return 'lean';
+                  return 'recomp';
+               } else if(bfPct < 20 || Math.abs(bfPct-20) < 1e-9){
+                  if(zone === 'under') return 'lean';
+                  return 'recomp';
+               } else if(bfPct < 25 || Math.abs(bfPct-25) < 1e-9){
+                  if(zone === 'over')  return 'cut';
+                  return (zone === 'under') ? 'lean' : 'recomp';
+               } else if(bfPct < 30){
+                  if(zone === 'over')  return 'cut';
+                  return (zone === 'under') ? 'lean' : 'recomp';
+               } else {
+                  if(zone === 'over')  return 'mini_cut';
+                  if(zone === 'in')    return 'cut';
+                  return 'lean';
+               }
+            } else {
+               if(bfPct < 15){
+                  if(zone === 'under') return 'agg_bulk';
+                  return 'bulk';
+               } else if(bfPct < 20 || Math.abs(bfPct-20) < 1e-9){
+                  if(zone === 'over')  return 'lean';
+                  return 'bulk';
+               } else if(bfPct < 25 || Math.abs(bfPct-25) < 1e-9){
+                  if(zone === 'over')  return 'recomp';
+                  return 'lean';
+               } else if(bfPct < 30 || Math.abs(bfPct-30) < 1e-9){
+                  if(zone === 'over')  return 'cut';
+                  return 'recomp';
+               } else if(bfPct < 40 || Math.abs(bfPct-40) < 1e-9){
+                  if(zone === 'over')  return 'mini_cut';
+                  return 'cut';
+               } else {
+                  return 'mini_cut';
+               }
+            }
+         }
+
+         recId = pickPlan(gender, bf, wZone);
+const goalIndex = goalsData.findIndex(g => g.id === recId);
+         if(goalIndex !== -1) {
+             const slider = $('goal-slider');
+             slider.value = goalIndex;
+             updatePlan();
+             $('advice-val').textContent = (currentLang === 'ar' ? goalsData[goalIndex].ar : goalsData[goalIndex].en);
+             $('advice-val').style.color = goalColors[goalIndex] || 'var(--text)';
+         } else {
+             $('advice-val').textContent = "—";
+             $('advice-val').style.color = 'var(--text)';
+         }
+
      } else {
          $('val-bf-pct').textContent = "—";
          $('val-bf-cat').textContent = "—";
          $('val-bf-cat').style.backgroundColor = 'transparent';
          $('val-fat-mass').textContent = "—";
          $('val-lean-mass').textContent = "—";
-         
-         const barBase = $('bf-bar-base');
-         barBase.style.background = 'var(--input-border)';
-         $('bf-marker').style.left = '-100px'; 
+         $('tag-fmi').textContent = "—"; $('tag-fmi').style.backgroundColor='transparent';
+         $('tag-ffmi').textContent = "—"; $('tag-ffmi').style.backgroundColor='transparent';
+         $('bf-bar-base').style.background = 'var(--input-border)';
+         $('bf-marker').style.left = '-100px';
+         $('advice-val').textContent = "—";
+             $('advice-val').style.color = 'var(--text)';
          $('val-ideal-bf-age').textContent = "—";
-         $('val-bf-lose').textContent = "—";
      }
 
-     if(isAdvExpanded) {
-        card.style.display = 'grid';
-     } else {
-        card.style.display = 'none';
-     }
+     if(isAdvExpanded) card.style.display = 'grid';
+     else card.style.display = 'none';
   }
 
   function calculateTDEE(){
     const age = parseFloat(normalize($('age').value));
     const w = parseFloat(normalize($('weight').value));
     const h = parseFloat(normalize($('height').value));
-    
     const maleRad = $('rad-male');
-    const g = maleRad.checked ? 'male' : 'female';
-    
+    const g = maleRad.checked ? 'male': 'female';
     const isSporty = $('is-sport').checked;
-
     if(!age || !w || !h) return;
     weightGlobal = w;
-    
     let base = (10*w) + (6.25*h) - (5*age) + (g==='male'?5:-161);
     const multiplier = isSporty ? 1.5 : 1.35;
-    
     tdeeGlobal = Math.round((base * multiplier) / 5) * 5;
-
     $('tdee-val').textContent = tdeeGlobal;
+    hasCalculated = true;
     $('result-card').classList.add('show');
-    $('goal-slider').value = 3;
-    
     calculateAdvanced(w, h, g, age);
     updatePlan();
   }
 
   function updatePlan(){
     if(!tdeeGlobal) return;
-    
     let idx = parseInt($('goal-slider').value);
     const data = goalsData[idx];
-
     const lbl = $('selected-goal');
     lbl.textContent = currentLang === 'ar' ? data.ar : data.en;
     lbl.style.color = goalColors[idx] ? goalColors[idx] : 'var(--text)';
-
     $('val-timeline').textContent = currentLang === 'ar' ? data.timeAr : data.timeEn;
-    $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+    $('val-timeline').style.direction = currentLang === 'ar' ? 'rtl': 'ltr';
 
+    if(!(isFinite(tdeeGlobal) && tdeeGlobal > 0)){
+      $('val-target-cals').textContent = '—';
+      $('val-prot').textContent = '—';
+      $('val-fat').textContent = '—';
+      $('val-carb').textContent = '—';
+      $('val-weight-change').textContent = '—';
+      return;
+    }
     const c1 = Math.round((tdeeGlobal * (1 + data.c_min))/5)*5;
     const c2 = Math.round((tdeeGlobal * (1 + data.c_max))/5)*5;
-    
-    let calArrow = '↔'; 
-    if (['mini_cut', 'cut', 'recomp'].includes(data.id)) {
-        calArrow = '→'; 
+    let calArrow = '↔';
+    if (data.id === 'maint') {
+      calArrow = '↔';
     } else if (['lean', 'bulk', 'agg_bulk'].includes(data.id)) {
-        calArrow = '←'; 
+      calArrow = (currentLang === 'ar') ? '←': '→';
+    } else {
+      calArrow = (currentLang === 'ar') ? '→': '←';
     }
-
     if(c1 === c2) $('val-target-cals').textContent = c1;
     else $('val-target-cals').innerHTML = formatRangeHTML(c1, c2, "", calArrow);
-
     const w1 = weightGlobal * data.w_pct[0];
     const w2 = weightGlobal * data.w_pct[1];
     $('val-weight-change').innerHTML = formatWeightHTML(w1, w2);
-
     const prot = Math.round(weightGlobal * data.p_min);
     $('val-prot').textContent = prot + "g";
-
     const fatMin = Math.round(weightGlobal * data.f_min);
     const fatMax = Math.round(weightGlobal * data.f_max);
-    
-    if(fatMin === fatMax) {
-        $('val-fat').textContent = fatMin + "g";
-    } else {
-        $('val-fat').innerHTML = formatFatRangeHTML(fatMin, fatMax, "g");
-    }
-
+    if(fatMin === fatMax) { $('val-fat').textContent = fatMin + "g"; }
+    else { $('val-fat').innerHTML = formatFatRangeHTML(fatMin, fatMax, "g"); }
     const fixedCalsMin = (weightGlobal * data.p_min * 4) + (weightGlobal * data.f_min * 9);
     const fixedCalsMax = (weightGlobal * data.p_max * 4) + (weightGlobal * data.f_max * 9);
-
     let cHigh = Math.round((Math.max(c1, c2) - fixedCalsMin) / 4);
     let cLow = Math.round((Math.min(c1, c2) - fixedCalsMax) / 4);
-
-    if(cLow < 0) cLow = 0;
-    if(cHigh < 0) cHigh = 0;
-
-    cLow = Math.round(cLow / 5) * 5; 
-    cHigh = Math.round(cHigh / 5) * 5; 
-    
+    if(cLow < 0) cLow = 0; if(cHigh < 0) cHigh = 0;
+    cLow = Math.round(cLow / 5) * 5; cHigh = Math.round(cHigh / 5) * 5;
     $('val-carb').innerHTML = formatRangeHTML(cLow, cHigh, "g", null);
   }
 
-  $('calc').addEventListener('click', calculateTDEE);
+    function clearOutputs(){
+    const dash = '—';
+    const outIds = [
+      'tdee-val','val-target-cals','val-carb','val-fat','val-prot','val-week-change','val-timeline','selected-goal',
+      'val-bf-pct','val-bf-cat','val-ideal-bf-age','val-ideal-w',
+      'val-fat-mass','val-lean-mass','tag-fmi','tag-ffmi',
+      'val-smm','val-smm-pct','tag-smm-level','val-smm-range',
+      'tag-whtr','val-water-pct','tag-water-level','val-water-range',
+      'val-muscle-pct','tag-muscle-level','val-muscle-range',
+      'val-action-fat','val-action-muscle',
+      'advice-val'
+    ];
+    for(const id of outIds){
+      const el = $(id);
+      if(!el) continue;
+      if(el.tagName && el.tagName.toLowerCase()==='div') el.innerHTML = dash;
+      else el.textContent = dash;
+    }
+    const clr = ['val-bf-cat','tag-fmi','tag-ffmi','tag-whtr','tag-smm-level','tag-water-level','tag-muscle-level'];
+    for(const id of clr){
+      const el = $(id); if(!el) continue;
+      el.style.backgroundColor = 'transparent';
+      el.style.color = '';
+    }
+    $('val-action-fat') && ($('val-action-fat').style.color='');
+    $('val-action-muscle') && ($('val-action-muscle').style.color='');
+    $('result-card') && ($('result-card').classList.remove('show'));
+    $('adv-result-card') && ($('adv-result-card').classList.remove('show'));
+  }
+
+  function resetAll(){
+    ['age','weight','height','neck','waist','hip'].forEach(id => { if($(id)) $(id).value = ''; });
+if($('is-sport')) $('is-sport').checked = false;
+    updateModeUI();
+    if($('rad-male')) $('rad-male').checked = true;
+
+    isAdvExpanded = false;
+    if($('adv-inputs')) $('adv-inputs').classList.add('adv-hidden');
+    if($('adv-icon-sym')) $('adv-icon-sym').textContent = '+';
+
+    if($('goal-slider')) $('goal-slider').value = 3;
+
+    tdeeGlobal = 0;
+    hasCalculated = false;
+
+    const hf = $('field-hip'); if(hf) hf.style.display = 'flex';
+  clearOutputs();
+    if($('adv-result-card')) $('adv-result-card').style.display = 'none';
+    if($('result-card')) $('result-card').classList.remove('show');
+
+    updatePlan();
+  }
+
+$('calc').addEventListener('click', calculateTDEE);
+  $('reset').addEventListener('click', resetAll);
   $('goal-slider').addEventListener('input', updatePlan);
-  $('is-sport').addEventListener('change', () => { if(tdeeGlobal > 0) calculateTDEE(); });
-  
+  $('is-sport').addEventListener('change', () => { updateModeUI(); if(tdeeGlobal > 0) calculateTDEE(); });
   $('btn-adv-toggle').addEventListener('click', () => {
       isAdvExpanded = !isAdvExpanded;
       const inputs = $('adv-inputs');
       const icon = $('adv-icon-sym');
       const results = $('adv-result-card');
-      
       if(isAdvExpanded) {
-          inputs.classList.remove('adv-hidden');
-          inputs.classList.add('adv-visible');
-          icon.textContent = "−"; 
-          if(tdeeGlobal > 0) calculateTDEE(); 
+          inputs.classList.remove('adv-hidden'); inputs.classList.add('adv-visible');
+          icon.textContent = "−";
+          if(tdeeGlobal > 0) { results.style.display = 'grid'; calculateTDEE(); }
+          else { results.style.display = 'none'; }
       } else {
-          inputs.classList.remove('adv-visible');
-          inputs.classList.add('adv-hidden');
-          icon.textContent = "+";
-          results.style.display = 'none';
+          inputs.classList.remove('adv-visible'); inputs.classList.add('adv-hidden');
+          icon.textContent = "+"; results.style.display = 'none';
       }
   });
-
   const radios = document.getElementsByName('gender');
   for(let r of radios) {
       r.addEventListener('change', (e) => {
           const hipField = $('field-hip');
-          if(e.target.value === 'female') hipField.style.display = 'flex';
-          else hipField.style.display = 'none';
+          if(hipField) hipField.style.display = 'flex';
           if(tdeeGlobal > 0) calculateTDEE();
       });
   }
-  
   $('btn-ar').addEventListener('click', ()=>setLang('ar'));
   $('btn-en').addEventListener('click', ()=>setLang('en'));
-
+  const hf = $('field-hip'); if(hf) hf.style.display = 'flex';
+  clearOutputs();
   setLang('ar');
+
 })();
 </script>
 </body>
