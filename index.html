@@ -498,7 +498,7 @@ input:checked + .slider:before{
       <span class="pct-tag" id="tag-ffmi">—</span>
     </div>
     <span class="mbox-label" id="lab-action-muscle" style="display:none;"></span>
-    <div class="mbox-val val-num" id="val-action-muscle" style="font-size:13px;">—</div>
+    <div class="mbox-val val-num" id="val-action-muscle" style="display:none; font-size:13px;">—</div>
   </div>
 
   <div class="mbox">
@@ -1256,7 +1256,8 @@ if($('lab-fat-risk')) $('lab-fat-risk').textContent = t.fatRisk;
     $('lab-bf-title').textContent = t.bfTitle;
     $('lab-fat-mass').textContent = t.fatMass;
     $('lab-lean-mass').textContent = t.leanMass;
-    $('lab-ideal-w').textContent = t.idealW;
+    
+    if($('lab-bodycomp')) $('lab-bodycomp').textContent = (lang === 'ar') ? 'تصنيف تركيبة الجسم' : 'Body composition';$('lab-ideal-w').textContent = t.idealW;
     if($('lab-ideal-bf-age')) $('lab-ideal-bf-age').textContent = (currentLang==='ar' ? 'نسبة الدهون المثالية :' : 'Ideal body fat:');
     $('advice-title').textContent = t.recTitle;
     if($('lab-action-fat')) $('lab-action-fat').textContent = t.required;
@@ -1773,10 +1774,10 @@ if(smmEl){
       if(currentLang === 'ar'){
         // مطلوب: اللي بعد السهم يصير قبل السهم (تبديل أماكن المستوى والوزن)
         smmRangeEl.style.direction = 'rtl';
-        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} kg</span><span class="arr">←</span><span class="lvl">${smmiMeta.nextAr}</span>`;
+        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} <small>kg</small></span><span class="arrow">←</span><span class="lvl">${smmiMeta.nextAr}</span>`;
       } else {
         smmRangeEl.style.direction = 'ltr';
-        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} kg</span><span class="arr">←</span><span class="lvl">${smmiMeta.nextEn}</span>`;
+        smmRangeEl.innerHTML = `<span class="kg" dir="ltr">+${kgRemaining.toFixed(1)} <small>kg</small></span><span class="arrow">→</span><span class="lvl">${smmiMeta.nextEn}</span>`;
       }
       smmRangeEl.style.color = 'var(--c-green)';
       smmRangeEl.style.fontWeight = '800';
@@ -1877,6 +1878,7 @@ const leanLabelEl = $('lab-action-muscle');
 const leanValEl   = $('val-action-muscle');
 if(leanLabelEl) leanLabelEl.textContent = '';
 if(leanValEl){
+  leanValEl.style.display = 'none';
   const pctPhraseLean = (p)=>{
     if(!isFinite(p)) return '—';
     const pp = Math.max(0, Math.min(100, Math.round(p)));
